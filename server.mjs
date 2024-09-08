@@ -5,9 +5,7 @@ const app = express();
 app.use(express.static("public"));
 
 app.get("/", async (req, res) => {
-  const httpRequest = await fetch(
-    "https://zsem.edu.pl:443/plany/plany/o14.html"
-  );
+  const httpRequest = await fetch("https://zsem.edu.pl/plany/plany/o14.html");
 
   let websiteData = await httpRequest.text();
   websiteData.replace("<!DOCTYPE html>", "");
@@ -44,7 +42,7 @@ app.get("/", async (req, res) => {
     responseHTML += `<tr>`;
     responseHTML += `<td data-id='hours'>${schedule.hours[i]}</td>`;
     for (let j = 0; j < schedule.days.length; j++) {
-      responseHTML += `<td data-id='number-${j}'>${
+      responseHTML += `<td data-id='number-${j}'><span data-id='time-to-start'></span>${
         schedule[schedule.days[j]][i]
       }<br><span data-id='time-to-end'></span></td>`;
     }

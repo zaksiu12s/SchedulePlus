@@ -8,41 +8,49 @@ function highlightCurrentLesson() {
   const currentTime = new Date();
   currentTime.setDate(2);
   currentTime.setHours(12);
-  currentTime.setMinutes(5);
-  currentTime.setSeconds(0);
 
-  const currentLesson = getCurrentLesson(currentTime);
-  console.log(currentLesson);
+  // clear elements
+  hourElements.forEach((elem) => {
+    elem.parentElement
+      .querySelectorAll("td[data-id^='number'")
+      .forEach((element) => {
+        element.style.backgroundColor = "transparent";
+        element.querySelector("span[data-id='time-to-end']").innerText = "";
+        element.querySelector("span[data-id='time-to-start']").innerText = "";
+      });
+  });
 
-  // hourElements[index].parentElement
-  //   .querySelectorAll("td[data-id^='number'")
-  //   .forEach((element) => {
-  //     element.style.backgroundColor = "transparent";
-  //     element.querySelector("span[data-id='time-to-end']").innerText = "";
-  //   });
+  const { currentLesson, isBreak, timeTo } = getCurrentLesson(currentTime);
+  if (!currentLesson) {
+    return;
+  }
 
   // highlight lesson element
   currentLesson.style.backgroundColor = "yellow";
 
-  // let timeToLessonEnd = hour.end.getTime() - currentTime.getTime();
-  // let minutesToLessonEnd = Math.floor(timeToLessonEnd / 1000 / 60);
-  // let secondsToLessonEnd = timeToLessonEnd / 1000 - minutesToLessonEnd * 60;
+  let timeToLessonEnd = timeTo;
+  let minutesToLessonEnd = Math.floor(timeToLessonEnd / 1000 / 60);
+  let secondsToLessonEnd = timeToLessonEnd / 1000 - minutesToLessonEnd * 60;
 
-  // currentLesson.querySelector(
-  //   "span[data-id='time-to-end']"
-  // ).innerText = `Do końca lekcji: ${minutesToLessonEnd}:${
-  //   secondsToLessonEnd > 9 ? secondsToLessonEnd : "0" + secondsToLessonEnd
-  // }`;
+  currentLesson.querySelector(
+    `span[data-id='${isBreak ? "time-to-start" : "time-to-end"}']`
+  ).innerHTML = `${
+    isBreak ? "Do lekcji zostało: " : "Do końca lekcji zostało: "
+  } ${minutesToLessonEnd}:${
+    secondsToLessonEnd > 9 ? secondsToLessonEnd : "0" + secondsToLessonEnd
+  }${isBreak ? "<br>" : ""}`;
 }
 
 function getCurrentLesson(time) {
-  let currentLesson = null;
+  let currentLesson = 0;
+  let isBreak = 0;
+  let timeTo = 0;
 
   const currentTime = time;
   const hours = getScheduleHours(hourElements, currentTime);
 
   if (currentTime.getDay() >= 6 || currentTime.getDay() == 0) {
-    return;
+    return { currentLesson, isBreak, timeTo };
   }
   for (let i = 0; i < hours.length; i++) {
     if (!hours[i + 1]) {
@@ -53,20 +61,25 @@ function getCurrentLesson(time) {
       currentLesson = hourElements[i].parentElement.querySelector(
         `td[data-id='number-${currentTime.getDay() - 1}']`
       );
+
+      timeTo = hours[i].end.getTime() - currentTime.getTime();
     }
 
     if (hours[i + 1].start > currentTime && hours[i].end <= currentTime) {
       currentLesson = hourElements[i + 1].parentElement.querySelector(
         `td[data-id='number-${currentTime.getDay() - 1}']`
       );
+
+      isBreak = true;
+      timeTo = hours[i + 1].start.getTime() - currentTime.getTime();
     }
   }
 
-  if (/^&nbsp;/i.test(currentLesson.innerHTML)) {
-    return;
+  if (currentLesson && currentLesson.innerHTML.includes("&nbsp;")) {
+    return { currentLesson, isBreak, timeTo };
   }
 
-  return currentLesson;
+  return { currentLesson, isBreak, timeTo };
 }
 
 function getScheduleHours(elements, correctionTime) {
