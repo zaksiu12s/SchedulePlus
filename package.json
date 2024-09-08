@@ -1,0 +1,17 @@
+{
+  "name": "zsem",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.mjs",
+  "scripts": {
+    "test": "",
+    "start": "nodemon server.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-html-parser": "^6.1.13"
+  }
+}
