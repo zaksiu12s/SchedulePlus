@@ -3,15 +3,16 @@
   "version": "0.0.1",
   "description": "",
   "main": "server.mjs",
+  "type": "module",
   "scripts": {
-    "test": "",
-    "start": "nodemon server.mjs"
+    "dev": "nodemon index.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.0",
     "node-html-parser": "^6.1.13"
   }
 }
