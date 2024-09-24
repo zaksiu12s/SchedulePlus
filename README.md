@@ -12,3 +12,7 @@ How to setup:
   6. Run npm i node-html-parser
   7. To run the application type: npm run dev
   8. The console will show if the server is running and the current port (default should be localhost:4000)
+
+Example requests:
+- http://localhost:4000/api/getClassTimetable?classTimetableLink=o15.html
+- http://localhost:4000/api/getClassBranches
