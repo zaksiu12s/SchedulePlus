@@ -35,8 +35,17 @@ router.get("/getClassBranches", async (req, res) => {
                 });
                 return;
             }
-            classBranchesObject[classBranch.childNodes[0].innerText] =
-                classBranch.attributes.href.replace("plany/", "");
+            const classBranchName = classBranch.childNodes[0].innerText.trim();
+            // add the new object that is name:
+            // if the name is only number like 42 then only the number
+            // but if its number and something else its only the first word/number
+            classBranchesObject[classBranchName.substring(0, classBranchName.indexOf(" ") == -1
+                ? classBranchName.length
+                : classBranchName.indexOf(" "))] = {
+                link: classBranch.attributes.href.replace("plany/", ""),
+                // everything after the number/first word
+                name: classBranchName.substring(classBranchName.indexOf(" ") + 1, classBranchName.length),
+            };
         });
         res.status(200).json({
             status: "ok",

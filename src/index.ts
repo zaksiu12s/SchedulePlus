@@ -10,6 +10,7 @@ const PORT: number = 4000;
 // importing modules
 import routerApi from "./api.js";
 app.use("/api", routerApi);
+app.use(express.static("frontend-examples"));
 
 app.listen(PORT, () => {
   console.log(`App running on: localhost:${PORT}`);
