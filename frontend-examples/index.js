@@ -4,8 +4,7 @@ const SERVER_LINK = `http://localhost:4000/api`;
 
 // getting all the class branches with fetch
 fetchClassBranches().then(async (classBranches) => {
-  const classSchedule = await fetchClassTimetable(classBranches["1d"].link);
-  console.log(classSchedule);
+  console.log(classBranches);
 });
 
 async function fetchClassBranches() {
