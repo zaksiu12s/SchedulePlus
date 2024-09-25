@@ -7,10 +7,21 @@ import { parse } from "node-html-parser";
 
 const router = express.Router();
 
+type classBranchesObject = {
+  [key: string]: string;
+};
+
+type scheduleObject = {
+  className: string;
+  classTimetableLink: string;
+  days: string[];
+  hours: string[];
+};
+
 // function fetches all the branches from the website and returns them to client
 router.get("/getClassBranches", async (req, res) => {
   // all the branches will be stored here
-  const classBranchesObject = {};
+  const classBranchesObject: classBranchesObject = {};
 
   // tries to fetch
   try {
@@ -117,7 +128,7 @@ router.get("/getClassTimetable", async (req, res) => {
     }
 
     // creates schedule object that is later added to response object and sent via it
-    const schedule = {
+    const scheduleObject: scheduleObject = {
       className,
       classTimetableLink: classTimetableLink,
       days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
@@ -126,19 +137,19 @@ router.get("/getClassTimetable", async (req, res) => {
 
     // adds the hours to the schedule object
     hourElements.forEach((hourElement) => {
-      schedule.hours.push(hourElement.innerText);
+      scheduleObject.hours.push(hourElement.innerText);
     });
 
     // for each day in the schedule.days array creates a new variable in schedule object => schedule[day]
-    schedule.days.forEach((day, index) => {
-      schedule[day] = [];
+    scheduleObject.days.forEach((day, index) => {
+      scheduleObject[day] = [];
 
       // the first lesson is index of current day and then its every 5th lesson after that, that's becouse
       // the lessons aren't ordered in daily way but rather in left to right way => that's why its adding 5
       // becouse there are 5 days in the week
       for (let i = index; i < lessonElements.length; i += 5) {
         const lessonName = lessonElements[i].textContent;
-        const classBranches = []; // contains link for teacher's/classe's or where the lesson will be
+        const classBranches: string[] = []; // contains link for teacher's/classe's or where the lesson will be
 
         lessonElements[i].querySelectorAll("a").forEach((classBranch) => {
           classBranches.push(classBranch.attributes.href);
@@ -149,7 +160,7 @@ router.get("/getClassTimetable", async (req, res) => {
           lessonElements[i].parentNode.querySelector(".g").childNodes[0]
             .innerText;
 
-        schedule[day].push({
+        scheduleObject[day].push({
           lesson: lessonName,
           attributes: classBranches,
           hour,
@@ -161,7 +172,7 @@ router.get("/getClassTimetable", async (req, res) => {
       status: "ok",
       error: "",
       notes: "data sent successfully",
-      data: schedule,
+      data: scheduleObject,
     });
   } catch (error) {
     res.status(503).json({

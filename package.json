@@ -2,17 +2,22 @@
   "name": "zsem",
   "version": "0.0.1",
   "description": "",
-  "main": "server.mjs",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.mjs"
+    "dev": "nodemon dist/index.js",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.7.0",
     "express": "^4.21.0",
     "node-html-parser": "^6.1.13"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.2"
   }
 }
