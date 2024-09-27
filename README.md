@@ -21,5 +21,5 @@ Npm commands:
 
 Example requests:
 
-- http://localhost:4000/api/getClassTimetable?classTimetableLink=o15.html
-- http://localhost:4000/api/getClassBranches
+- http://localhost:4000/api/v1/getClassTimetable?classTimetableLink=o15.html
+- http://localhost:4000/api/v1/getClassBranches
