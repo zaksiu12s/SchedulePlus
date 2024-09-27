@@ -12,9 +12,8 @@ app.use((req, res, next) => {
     next();
 });
 // importing modules
-import routerApi from "./api.js";
-app.use("/api", routerApi);
-app.use(express.static("frontend-examples"));
+import routerApiV1 from "./api/v1.js";
+app.use("/api/v1", routerApiV1);
 app.listen(PORT, () => {
     console.log(`App running on: localhost:${PORT}`);
 });

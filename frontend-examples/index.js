@@ -1,6 +1,6 @@
 "use strict";
 
-const SERVER_LINK = `http://localhost:4000/api`;
+const SERVER_LINK = `http://localhost:4000/api/v1`;
 
 // getting all the class branches with fetch
 fetchClassBranches().then(async (classBranches) => {
