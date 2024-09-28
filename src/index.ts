@@ -3,9 +3,10 @@
 // express - to handle requests from client
 // node-html-parser - to convert text data from fetch request to js objects with HTML DOM
 import express, { Express } from "express";
+import "dotenv/config";
 
 const app: Express = express();
-const PORT: number = 4000;
+const PORT: number = Number(process.env.PORT) || 4000;
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

@@ -5,8 +5,10 @@
 import { error } from "console";
 import express from "express";
 import { parse } from "node-html-parser";
+import "dotenv/config";
 
 const router = express.Router();
+const useDB = Boolean(process.env.useDB) || false;
 
 interface classBranchesObject {
   [key: string]: {
