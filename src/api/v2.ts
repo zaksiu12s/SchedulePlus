@@ -22,6 +22,121 @@ interface scheduleObject {
   hours: string[];
 }
 
+interface practiceDatesObject {
+  [key: string]: {
+    startDate: string;
+    endDate: string;
+  };
+}
+
+// function fetches all the branches from the website and returns them to client
+router.get("/getClassrooms", async (req, res) => {
+  try {
+    const classrooms = await getAllBranches();
+
+    for (let branch in classrooms) {
+      if (!/[a-zA-Z]*[0-9]$|^[a-zA-Z]*$/.test(branch)) {
+        delete classrooms[branch];
+      }
+    }
+
+    res.status(200).json({
+      status: "ok",
+      notes: "data sent successfully",
+      error: "",
+      data: classrooms,
+    });
+
+    return;
+  } catch (error) {
+    res.status(503).json({
+      status: "failed",
+      notes: "try again later",
+      error: "school server didn't respond",
+    });
+
+    return;
+  }
+});
+
+router.get("/getTeachers", async (req, res) => {
+  try {
+    const classrooms = await getAllBranches();
+
+    for (let branch in classrooms) {
+      if (!/[[.]/.test(branch)) {
+        delete classrooms[branch];
+        continue;
+      }
+
+      classrooms[classrooms[branch].name.replace("(", "").replace(")", "")] = {
+        name: branch,
+        link: classrooms[branch].link,
+      };
+      delete classrooms[branch];
+    }
+
+    res.status(200).json({
+      status: "ok",
+      notes: "data sent successfully",
+      error: "",
+      data: classrooms,
+    });
+
+    return;
+  } catch (error) {
+    res.status(503).json({
+      status: "failed",
+      notes: "try again later",
+      error: "school server didn't respond",
+    });
+
+    return;
+  }
+});
+
+router.get("/getPracticeDates", async (req, res) => {
+  const practiceDatesObject: practiceDatesObject = {};
+
+  try {
+    const request = await fetch("https://zsem.edu.pl/plany/praktyki_lista.php");
+    const websiteData = await request.text();
+    websiteData.replace("<!DOCTYPE html>", "");
+
+    const root = parse(websiteData);
+    const practiceDateElements = root.querySelectorAll("tr");
+
+    practiceDateElements.forEach((element) => {
+      element.childNodes[0].innerText.split(",").forEach((elem) => {
+        if (elem.trim() == "") {
+          return;
+        }
+        practiceDatesObject[elem.trim()] = {
+          startDate: element.childNodes[1].innerText.split(" - ")[0].trim(),
+          endDate: element.childNodes[1].innerText.split(" - ")[1].trim(),
+        };
+      });
+    });
+
+    res.status(200).json({
+      status: "ok",
+      notes: "data sent successfully",
+      error: "",
+      data: practiceDatesObject,
+    });
+
+    return;
+  } catch (error) {
+    res.status(503).json({
+      status: "failed",
+      notes: "try again later",
+      error: "school server didn't respond",
+    });
+
+    return;
+  }
+});
+
 // function fetches all the branches from the website and returns them to client
 router.get("/getClassBranches", async (req, res) => {
   try {
@@ -121,12 +236,12 @@ router.get("/getClassTimetable", async (req, res) => {
     scheduleObject.days.forEach((day, index) => {
       scheduleObject[day] = [];
 
-      // the first lesson is index of current day and then its every 5th lesson after that, that's becouse
+      // the first lesson is index of current day and then its every 5th lesson after that, that's because
       // the lessons aren't ordered in daily way but rather in left to right way => that's why its adding 5
-      // becouse there are 5 days in the week
+      // because there are 5 days in the week
       for (let i = index; i < lessonElements.length; i += 5) {
         const lessonName = lessonElements[i].textContent;
-        const classBranches: string[] = []; // contains link for teacher's/classe's or where the lesson will be
+        const classBranches: string[] = []; // contains link for teacher's/classes or where the lesson will be
 
         lessonElements[i].querySelectorAll("a").forEach((classBranch) => {
           classBranches.push(classBranch.attributes.href);
@@ -158,6 +273,18 @@ router.get("/getClassTimetable", async (req, res) => {
       error: "wrong class link",
     });
   }
+});
+
+router.get("/info", (req, res) => {
+  const workingAPIS: string[] = [];
+  router.stack.forEach((stack) => {
+    workingAPIS.push(stack.route.path);
+  });
+
+  res.status(200).json({
+    status: "ok",
+    workingLinksAPI: workingAPIS,
+  });
 });
 
 // gets all the branches and returns them (classes, teachers, rooms etc)
