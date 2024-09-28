@@ -29,13 +29,18 @@ interface practiceDatesObject {
   };
 }
 
-// function fetches all the branches from the website and returns them to client
+// fetches the classroom branches from the website and returns them to client
 router.get("/getClassrooms", async (req, res) => {
   try {
+    // returns all the branches
     const classrooms = await getAllBranches();
 
+    // leaves only the classrooms branches
     for (let branch in classrooms) {
-      if (!/[a-zA-Z]*[0-9]$|^[a-zA-Z]*$/.test(branch)) {
+      // classroom regexp, either only contains letters or contains 0 or more letters followed by numbers
+      const classRoomRegexp = /[a-zA-Z]*[0-9]$|^[a-zA-Z]*$/;
+
+      if (!classRoomRegexp.test(branch)) {
         delete classrooms[branch];
       }
     }
@@ -59,28 +64,35 @@ router.get("/getClassrooms", async (req, res) => {
   }
 });
 
+// fetches all the techer branches from website and returns them to client
 router.get("/getTeachers", async (req, res) => {
   try {
-    const classrooms = await getAllBranches();
+    // fetches all the branches
+    const teachers = await getAllBranches();
 
-    for (let branch in classrooms) {
-      if (!/[[.]/.test(branch)) {
-        delete classrooms[branch];
+    // removes every branch that isnt teacher
+    for (let branch in teachers) {
+      // teacher regexp, contains the
+      const techersRegexp = /[.]/;
+
+      if (!techersRegexp.test(branch)) {
+        delete teachers[branch];
         continue;
       }
 
-      classrooms[classrooms[branch].name.replace("(", "").replace(")", "")] = {
+      // replaces teachers object name property with its name and then removes parenthesis
+      teachers[teachers[branch].name.replace("(", "").replace(")", "")] = {
         name: branch,
-        link: classrooms[branch].link,
+        link: teachers[branch].link,
       };
-      delete classrooms[branch];
+      delete teachers[branch];
     }
 
     res.status(200).json({
       status: "ok",
       notes: "data sent successfully",
       error: "",
-      data: classrooms,
+      data: teachers,
     });
 
     return;
@@ -95,6 +107,7 @@ router.get("/getTeachers", async (req, res) => {
   }
 });
 
+// fetches and returns to client all the practice dates
 router.get("/getPracticeDates", async (req, res) => {
   const practiceDatesObject: practiceDatesObject = {};
 
@@ -106,14 +119,20 @@ router.get("/getPracticeDates", async (req, res) => {
     const root = parse(websiteData);
     const practiceDateElements = root.querySelectorAll("tr");
 
+    // for each tr (tr contains two tds) every [0] is class name [1] is date
     practiceDateElements.forEach((element) => {
+      // splits the class name into multiple classes (3m, 2p, 1e) etc
       element.childNodes[0].innerText.split(",").forEach((elem) => {
+        // if class name is null then it returns
         if (elem.trim() == "") {
           return;
         }
+
+        // creates object property as the class name that contains end and start date
+        const date = element.childNodes[1].innerText;
         practiceDatesObject[elem.trim()] = {
-          startDate: element.childNodes[1].innerText.split(" - ")[0].trim(),
-          endDate: element.childNodes[1].innerText.split(" - ")[1].trim(),
+          startDate: date.split(" - ")[0].trim(),
+          endDate: date.split(" - ")[1].trim(),
         };
       });
     });
@@ -140,10 +159,13 @@ router.get("/getPracticeDates", async (req, res) => {
 // function fetches all the branches from the website and returns them to client
 router.get("/getClassBranches", async (req, res) => {
   try {
+    // returns all the branches
     const classBranchesObject = await getAllBranches();
 
+    // removes the branches that arent classes'
     for (let branch in classBranchesObject) {
-      if (!/[0-9][a-zA-Z]/.test(branch)) {
+      const classRegexp = /[0-9][a-zA-Z]/;
+      if (!classRegexp.test(branch)) {
         delete classBranchesObject[branch];
       }
     }
@@ -290,7 +312,7 @@ router.get("/info", (req, res) => {
 // gets all the branches and returns them (classes, teachers, rooms etc)
 async function getAllBranches(): Promise<classBranchesObject> {
   // all the branches will be stored here
-  const classBranchesObject: classBranchesObject = {};
+  const branchesObject: classBranchesObject = {};
 
   // tries to fetch
   try {
@@ -317,14 +339,14 @@ async function getAllBranches(): Promise<classBranchesObject> {
       // the key name of the object is the first word of the classBranchName
       const classBranchesObjectKey = classBranchName.split(" ")[0];
 
-      classBranchesObject[classBranchesObjectKey] = {
+      branchesObject[classBranchesObjectKey] = {
         link: classBranch.attributes.href.replace("plany/", ""),
         // name is everything after the first word
         name: classBranchName.substring(classBranchName.indexOf(" ") + 1),
       };
     });
 
-    return classBranchesObject;
+    return branchesObject;
   } catch (error) {
     return new error();
   }
