@@ -7,7 +7,6 @@ import express from "express";
 import { parse } from "node-html-parser";
 import "dotenv/config";
 const router = express.Router();
-const useDB = Boolean(process.env.useDB) || false;
 // fetches the classroom branches from the website and returns them to client
 router.get("/getClassrooms", async (req, res) => {
     try {
