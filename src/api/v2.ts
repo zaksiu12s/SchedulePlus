@@ -18,8 +18,8 @@ interface classBranchesObject {
 }
 
 interface scheduleObject {
-  className: string;
-  classTimetableLink: string;
+  branchName: string;
+  branchTimetableLink: string;
   days: string[];
   hours: string[];
 }
@@ -191,10 +191,10 @@ router.get("/getClassBranches", async (req, res) => {
   }
 });
 
-router.get("/getClassTimetable", async (req, res) => {
+router.get("/getBranchTimetable", async (req, res) => {
   // if user didn't specify query: classTimetableLink = "o14.html"
   // responds with status 400 and sends fail data and returns
-  if (!req.query.classTimetableLink) {
+  if (!req.query.branchLink) {
     res.status(400).json({
       status: "failed",
       notes:
@@ -207,8 +207,8 @@ router.get("/getClassTimetable", async (req, res) => {
 
   // tries to fetch data from school schedule, then edit data and send to client
   try {
-    const classTimetableLink = `https://zsem.edu.pl/plany/plany/${req.query.classTimetableLink}`;
-    const request = await fetch(classTimetableLink);
+    const branchTimetableLink = `https://zsem.edu.pl/plany/plany/${req.query.branchLink}`;
+    const request = await fetch(branchTimetableLink);
 
     let websiteData = await request.text();
     websiteData.replace("<!DOCTYPE html>", "");
@@ -216,11 +216,11 @@ router.get("/getClassTimetable", async (req, res) => {
     const root = parse(websiteData);
     const lessonElements = root.querySelectorAll(".l"); //array of all the lessons in the week
     const hourElements = root.querySelectorAll(".g"); //array of all the hours of the current schedule
-    const classNameElement = root.querySelector(".tytulnapis");
+    const branchNameElement = root.querySelector(".tytulnapis");
 
     // check if className exists if not responds with error and returns
     // if it exists saves the text
-    if (classNameElement.childNodes[0] === undefined) {
+    if (branchNameElement.childNodes[0] === undefined) {
       res.status(503).json({
         status: "failed",
         notes: "try again later",
@@ -229,7 +229,7 @@ router.get("/getClassTimetable", async (req, res) => {
 
       return;
     }
-    const className = classNameElement.childNodes[0].innerText;
+    const branchName = branchNameElement.childNodes[0].innerText;
 
     // check if the lessons exist
     // if not then send error response and return
@@ -245,8 +245,8 @@ router.get("/getClassTimetable", async (req, res) => {
 
     // creates schedule object that is later added to response object and sent via it
     const scheduleObject: scheduleObject = {
-      className,
-      classTimetableLink: classTimetableLink,
+      branchName,
+      branchTimetableLink: branchTimetableLink,
       days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
       hours: [],
     };
@@ -272,9 +272,16 @@ router.get("/getClassTimetable", async (req, res) => {
         });
 
         // saves the lesson hour
-        const hour =
-          lessonElements[i].parentNode.querySelector(".g").childNodes[0]
-            .innerText;
+        const hour = {
+          start: lessonElements[i].parentNode
+            .querySelector(".g")
+            .childNodes[0].innerText.split("-")[0]
+            .trim(),
+          end: lessonElements[i].parentNode
+            .querySelector(".g")
+            .childNodes[0].innerText.split("-")[1]
+            .trim(),
+        };
 
         scheduleObject[day].push({
           lesson: lessonName,
