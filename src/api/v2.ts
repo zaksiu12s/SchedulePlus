@@ -8,7 +8,7 @@ import { parse } from "node-html-parser";
 import "dotenv/config";
 
 const router = express.Router();
-const useDB = Boolean(process.env.useDB) || false;
+// const useDB = Boolean(process.env.useDB) || false;
 
 interface classBranchesObject {
   [key: string]: {
