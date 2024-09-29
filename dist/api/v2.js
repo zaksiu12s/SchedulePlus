@@ -156,9 +156,28 @@ router.get("/getBranchTimetable", async (req, res) => {
         });
         return;
     }
+    const branchLink = req.query.branchLink;
+    let branchType;
+    if (typeof branchLink === "string" && /[o]/.test(branchLink)) {
+        branchType = "class";
+    }
+    else if (typeof branchLink === "string" && /[n]/.test(branchLink)) {
+        branchType = "teacher";
+    }
+    else if (typeof branchLink === "string" && /[s]/.test(branchLink)) {
+        branchType = "classroom";
+    }
+    else {
+        res.status(400).json({
+            status: "failed",
+            notes: "Please specify classTimetableLink query. For example ?classTimetableLink=o14.html",
+            error: "No classTimetableLink query specified.",
+        });
+        return;
+    }
     // tries to fetch data from school schedule, then edit data and send to client
     try {
-        const branchTimetableLink = `https://zsem.edu.pl/plany/plany/${req.query.branchLink}`;
+        const branchTimetableLink = `https://zsem.edu.pl/plany/plany/${branchLink}`;
         const request = await fetch(branchTimetableLink);
         let websiteData = await request.text();
         websiteData.replace("<!DOCTYPE html>", "");
@@ -190,10 +209,14 @@ router.get("/getBranchTimetable", async (req, res) => {
         // creates schedule object that is later added to response object and sent via it
         const scheduleObject = {
             branchName,
+            branchType,
             branchTimetableLink: branchTimetableLink,
             days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
             hours: [],
+            daysLanguage: [],
         };
+        // in future add language api
+        scheduleObject.daysLanguage = scheduleObject.days;
         // adds the hours to the schedule object
         hourElements.forEach((hourElement) => {
             scheduleObject.hours.push(hourElement.innerText);
@@ -204,7 +227,8 @@ router.get("/getBranchTimetable", async (req, res) => {
             // the first lesson is index of current day and then its every 5th lesson after that, that's because
             // the lessons aren't ordered in daily way but rather in left to right way => that's why its adding 5
             // because there are 5 days in the week
-            for (let i = index; i < lessonElements.length; i += 5) {
+            for (let i = index; i < lessonElements.length; i += lessonElements[i].parentNode.querySelectorAll(".l").length) {
+                // adds number of days                            ^^^^^
                 const lessonName = lessonElements[i].textContent;
                 const classBranches = []; // contains link for teacher's/classes or where the lesson will be
                 lessonElements[i].querySelectorAll("a").forEach((classBranch) => {
@@ -222,7 +246,7 @@ router.get("/getBranchTimetable", async (req, res) => {
                         .trim(),
                 };
                 scheduleObject[day].push({
-                    lesson: lessonName,
+                    lesson: lessonName.split("\n"),
                     attributes: classBranches,
                     hour,
                 });
