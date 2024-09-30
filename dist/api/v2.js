@@ -145,7 +145,7 @@ router.get("/getClassBranches", async (req, res) => {
         return;
     }
 });
-router.get("/getBranchTimetable", async (req, res) => {
+router.get("/getTimetable", async (req, res) => {
     // if user didn't specify query: classTimetableLink = "o14.html"
     // responds with status 400 and sends fail data and returns
     if (!req.query.branchLink) {
@@ -210,10 +210,10 @@ router.get("/getBranchTimetable", async (req, res) => {
         const scheduleObject = {
             branchName,
             branchType,
-            branchTimetableLink: branchTimetableLink,
+            branchFullLink: branchTimetableLink,
             days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
-            hours: [],
             daysLanguage: [],
+            hours: [],
         };
         // in future add language api
         scheduleObject.daysLanguage = scheduleObject.days;
@@ -245,9 +245,63 @@ router.get("/getBranchTimetable", async (req, res) => {
                         .childNodes[0].innerText.split("-")[1]
                         .trim(),
                 };
+                const lessons = lessonName.split("\n");
+                const lessonsArr = [];
+                const branchType1 = {
+                    teacher: {
+                        classroom: 2,
+                        subject: 1,
+                        class: 0,
+                        teacher: -1,
+                    },
+                    classroom: {
+                        teacher: 0,
+                        class: 1,
+                        subject: 2,
+                        classroom: -1,
+                    },
+                    class: {
+                        teacher: 1,
+                        classroom: 2,
+                        class: -1,
+                        subject: 0,
+                    },
+                };
+                lessons.forEach((lesson) => {
+                    const branchTypeChecker = branchType1[branchType];
+                    lessonsArr.push({
+                        subject: lesson.split(" ")[branchTypeChecker.subject],
+                        class: {
+                            name: lesson.split(" ")[branchTypeChecker.class],
+                            link: classBranches.find((branch) => {
+                                if (branch && branch.includes("o")) {
+                                    classBranches[index] = "";
+                                    return true;
+                                }
+                            }),
+                        },
+                        teacher: {
+                            name: lesson.split(" ")[branchTypeChecker.teacher],
+                            link: classBranches.find((branch) => {
+                                if (branch && branch.includes("n")) {
+                                    classBranches[index] = "";
+                                    return true;
+                                }
+                            }),
+                        },
+                        classroom: {
+                            name: lesson.split(" ")[branchTypeChecker.classroom],
+                            link: classBranches.find((branch, index) => {
+                                if (branch && branch.includes("s")) {
+                                    classBranches[index] = "";
+                                    return true;
+                                }
+                            }),
+                        },
+                    });
+                });
                 scheduleObject[day].push({
-                    lesson: lessonName.split("\n"),
-                    attributes: classBranches,
+                    lessons: lessonsArr,
                     hour,
                 });
             }
@@ -260,6 +314,7 @@ router.get("/getBranchTimetable", async (req, res) => {
         });
     }
     catch (error) {
+        console.log(error);
         res.status(503).json({
             status: "failed",
             notes: "try again with correct class link",
