@@ -115,32 +115,36 @@ class ClassData {
 
 const router = express.Router();
 
-router.get("/allBranches", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/allBranches", async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+    const responseObject: {
+      teachersData?: TeacherData[],
+      classesData: ClassData[],
+      classroomsData?: ClassroomData[]
+    } = { classesData: [] };
     const schoolWebsiteData: string = await getWebsiteData();
 
-    const teachersElements: ParsedHTMLElement[] | null = getTeachersElements(schoolWebsiteData);
-    if (!teachersElements) {
-      res.status(404).json({ message: "No teachers found on the website." });
-      return;
+    const teachersElements: ParsedHTMLElement[] | null = getSpecifiedElements(schoolWebsiteData, 1);
+    if (teachersElements) {
+      const teachersData: TeacherData[] = getTeachersData(teachersElements);
+      responseObject.teachersData = teachersData;
     }
-    const teachersData = getTeachersData(teachersElements);
 
-    const classesElements: ParsedHTMLElement[] | null = getClassesElements(schoolWebsiteData);
+    const classesElements: ParsedHTMLElement[] | null = getSpecifiedElements(schoolWebsiteData, 0);
     if (!classesElements) {
       res.status(404).json({ message: "No classes found on the website." });
       return;
     }
-    const classesData = getClassesData(classesElements);
+    const classesData: ClassData[] = getClassesData(classesElements);
+    responseObject.classesData = classesData;
 
-    const classroomsElements: ParsedHTMLElement[] | null = getClassroomsElements(schoolWebsiteData);
-    if (!classroomsElements) {
-      res.status(404).json({ message: "No classrooms found on the website." });
-      return;
+    const classroomsElements: ParsedHTMLElement[] | null = getSpecifiedElements(schoolWebsiteData, 2);
+    if (classroomsElements) {
+      const classroomData: ClassroomData[] = getClassroomsData(classroomsElements);
+      responseObject.classroomsData = classroomData;
     }
-    const classroomData = getClassroomsData(classroomsElements);
 
-    res.json({ classroomData, teachersData, classesData });
+    res.json(responseObject);
   } catch (err) {
     next(err);
   }
@@ -152,44 +156,22 @@ async function getWebsiteData(schoolLink = "https://zsem.edu.pl/plany/lista.html
 
   // School website data in string format
   const schoolWebsiteData: string = await request.text();
-
   return schoolWebsiteData;
 }
 
-function getTeachersElements(schoolWebsiteData: string) {
-  const schoolWebsiteDOM = parse(schoolWebsiteData);
+function getSpecifiedElements(schoolWebsiteData: string, elementsType: number): ParsedHTMLElement[] | null {
+  const schoolWebsiteDOM: ParsedHTMLElement = parse(schoolWebsiteData);
+  if (elementsType > 2 || elementsType < 0) {
+    return null;
+  }
 
-  const list = schoolWebsiteDOM.querySelectorAll("ul")[1];
+  const list: ParsedHTMLElement | undefined = schoolWebsiteDOM.querySelectorAll("ul")[elementsType];
   if (!list) return null;
 
-  const teachersList = list.querySelectorAll("a");
-  if (teachersList && teachersList.length <= 0) return null;
+  const specifiedList: ParsedHTMLElement[] = list.querySelectorAll("a");
+  if (specifiedList && specifiedList.length <= 0) return null;
 
-  return teachersList;
-}
-
-function getClassesElements(schoolWebsiteData: string) {
-  const schoolWebsiteDOM = parse(schoolWebsiteData);
-
-  const list = schoolWebsiteDOM.querySelectorAll("ul")[0];
-  if (!list) return null;
-
-  const classList = list.querySelectorAll("a");
-  if (classList && classList.length <= 0) return null;
-
-  return classList;
-}
-
-function getClassroomsElements(schoolWebsiteData: string) {
-  const schoolWebsiteDOM = parse(schoolWebsiteData);
-
-  const list = schoolWebsiteDOM.querySelectorAll("ul")[2];
-  if (!list) return null;
-
-  const classroomList = list.querySelectorAll("a");
-  if (classroomList && classroomList.length <= 0) return null;
-
-  return classroomList;
+  return specifiedList;
 }
 
 function getClassesData(classesElements: ParsedHTMLElement[]): ClassData[] {
