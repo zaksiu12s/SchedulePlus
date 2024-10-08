@@ -1,455 +1,255 @@
-// importing libraries
-// working on:
-// express - to handle requests from client
-// node-html-parser - to convert text data from fetch request to js objects with HTML DOM
-import { error } from "console";
-import express from "express";
-import { parse } from "node-html-parser";
+import express, { Request, Response, NextFunction } from "express";
+import { parse, HTMLElement as ParsedHTMLElement } from "node-html-parser";
 import "dotenv/config";
 
+class ClassroomData {
+  private wholeName: string;
+  private link: string;
+  private shortName?: string;
+  private longName?: string;
+
+  constructor(wholeName: string, link: string) {
+    this.wholeName = wholeName;
+    this.link = link.substring(link.indexOf("/") + 1);
+  }
+
+  public generateShortName(): this {
+    if (this.wholeName.indexOf(" ") == -1) return this;
+
+    const shortName: string = this.wholeName.substring(0, this.wholeName.indexOf(" "));
+    this.shortName = shortName;
+
+    return this;
+  }
+
+  public generateLongName(): this {
+    if (this.wholeName.indexOf(" ") == -1) return this;
+
+    const longName: string = this.wholeName.substring(this.wholeName.indexOf(" ") + 1);
+    this.longName = longName;
+
+    return this;
+  }
+}
+
+class TeacherData {
+  private wholeName: string;
+  private link: string;
+  private shortName?: string;
+  private longName?: string;
+
+  constructor(wholeName: string, link: string) {
+    this.wholeName = wholeName;
+    this.link = link.substring(link.indexOf("/") + 1);
+  };
+
+  public generateShortName(): this {
+    if (this.wholeName.indexOf("(") == -1 || this.wholeName.indexOf(")") == -1) return this;
+
+    const shortNameStart: number = this.wholeName.indexOf("(") + 1;
+    const shortNameEnd: number = this.wholeName.indexOf(")");
+
+    const shortName: string = this.wholeName.substring(shortNameStart, shortNameEnd).trim();
+    this.shortName = shortName;
+
+    return this;
+  }
+
+  public generateLongName(): this {
+    if (this.wholeName.indexOf("(") == -1) return this;
+
+    const longNameEnd: number = this.wholeName.indexOf("(");
+
+    const longName: string = this.wholeName.substring(0, longNameEnd).trim();
+    this.longName = longName;
+
+    return this;
+  }
+}
+
+class ClassData {
+  private wholeName: string;
+  private link: string;
+  private className?: string;
+  private profileName?: string;
+  private year?: number;
+
+  constructor(wholeName: string, link: string) {
+    this.wholeName = wholeName;
+    this.link = link.substring(link.indexOf("/") + 1);
+  }
+
+  public generateClassName(): this {
+    if (this.wholeName.indexOf(" ") == -1) return this;
+
+    const classNameEnd = this.wholeName.indexOf(" ")
+    this.className = this.wholeName.substring(0, classNameEnd);
+
+    return this;
+  }
+
+  public generateProfileName(): this {
+    if (this.wholeName.indexOf(" ") == -1) return this;
+
+    // Adding 2 because the profile name is like: 2informatyk so as to delete the 2 in front
+    const profileNameStart = this.wholeName.indexOf(" ") + 2;
+    this.profileName = this.wholeName.substring(profileNameStart);
+
+    return this;
+  }
+
+  public generateYear(): this {
+    if (this.wholeName.indexOf(" ") == -1) return this;
+
+    const yearStart = this.wholeName.indexOf(" ") + 1;
+    const yearEnd = yearStart + 1;
+    const year = Number(this.wholeName.substring(yearStart, yearEnd))
+    if (isNaN(year)) {
+      return this;
+    }
+
+    this.year = year;
+    return this;
+  }
+}
+
 const router = express.Router();
-// const useDB = Boolean(process.env.useDB) || false;
 
-interface classBranchesObject {
-  [key: string]: {
-    name: string;
-    link: string;
-  };
-}
-
-interface scheduleObject {
-  branchName: string;
-  branchType: string;
-  branchFullLink: string;
-  days: string[];
-  daysLanguage: string[];
-  hours: string[];
-}
-
-interface practiceDatesObject {
-  [key: string]: {
-    startDate: string;
-    endDate: string;
-  };
-}
-
-// fetches the classroom branches from the website and returns them to client
-router.get("/getClassrooms", async (req, res) => {
+router.get("/allBranches", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // returns all the branches
-    const classrooms = await getAllBranches();
+    const schoolWebsiteData: string = await getWebsiteData();
 
-    // leaves only the classrooms branches
-    for (let branch in classrooms) {
-      // classroom regexp, either only contains letters or contains 0 or more letters followed by numbers
-      const classRoomRegexp = /[a-zA-Z]*[0-9]$|^[a-zA-Z]*$/;
-
-      if (!classRoomRegexp.test(branch)) {
-        delete classrooms[branch];
-      }
-    }
-
-    res.status(200).json({
-      status: "ok",
-      notes: "data sent successfully",
-      error: "",
-      data: classrooms,
-    });
-
-    return;
-  } catch (error) {
-    res.status(503).json({
-      status: "failed",
-      notes: "try again later",
-      error: "school server didn't respond",
-    });
-
-    return;
-  }
-});
-
-// fetches all the techer branches from website and returns them to client
-router.get("/getTeachers", async (req, res) => {
-  try {
-    // fetches all the branches
-    const teachers = await getAllBranches();
-
-    // removes every branch that isnt teacher
-    for (let branch in teachers) {
-      // teacher regexp, contains the
-      const techersRegexp = /[.]/;
-
-      if (!techersRegexp.test(branch)) {
-        delete teachers[branch];
-        continue;
-      }
-
-      // replaces teachers object name property with its name and then removes parenthesis
-      teachers[teachers[branch].name.replace("(", "").replace(")", "")] = {
-        name: branch,
-        link: teachers[branch].link,
-      };
-      delete teachers[branch];
-    }
-
-    res.status(200).json({
-      status: "ok",
-      notes: "data sent successfully",
-      error: "",
-      data: teachers,
-    });
-
-    return;
-  } catch (error) {
-    res.status(503).json({
-      status: "failed",
-      notes: "try again later",
-      error: "school server didn't respond",
-    });
-
-    return;
-  }
-});
-
-// fetches and returns to client all the practice dates
-router.get("/getPracticeDates", async (req, res) => {
-  const practiceDatesObject: practiceDatesObject = {};
-
-  try {
-    const request = await fetch("https://zsem.edu.pl/plany/praktyki_lista.php");
-    const websiteData = await request.text();
-    websiteData.replace("<!DOCTYPE html>", "");
-
-    const root = parse(websiteData);
-    const practiceDateElements = root.querySelectorAll("tr");
-
-    // for each tr (tr contains two tds) every [0] is class name [1] is date
-    practiceDateElements.forEach((element) => {
-      // splits the class name into multiple classes (3m, 2p, 1e) etc
-      element.childNodes[0].innerText.split(",").forEach((elem) => {
-        // if class name is null then it returns
-        if (elem.trim() == "") {
-          return;
-        }
-
-        // creates object property as the class name that contains end and start date
-        const date = element.childNodes[1].innerText;
-        practiceDatesObject[elem.trim()] = {
-          startDate: date.split(" - ")[0].trim(),
-          endDate: date.split(" - ")[1].trim(),
-        };
-      });
-    });
-
-    res.status(200).json({
-      status: "ok",
-      notes: "data sent successfully",
-      error: "",
-      data: practiceDatesObject,
-    });
-
-    return;
-  } catch (error) {
-    res.status(503).json({
-      status: "failed",
-      notes: "try again later",
-      error: "school server didn't respond",
-    });
-
-    return;
-  }
-});
-
-// function fetches all the branches from the website and returns them to client
-router.get("/getClassBranches", async (req, res) => {
-  try {
-    // returns all the branches
-    const classBranchesObject = await getAllBranches();
-
-    // removes the branches that arent classes'
-    for (let branch in classBranchesObject) {
-      const classRegexp = /[0-9][a-zA-Z]/;
-      if (!classRegexp.test(branch)) {
-        delete classBranchesObject[branch];
-      }
-    }
-
-    res.status(200).json({
-      status: "ok",
-      notes: "data sent successfully",
-      error: "",
-      data: classBranchesObject,
-    });
-
-    return;
-  } catch (error) {
-    res.status(503).json({
-      status: "failed",
-      notes: "try again later",
-      error: "school server didn't respond",
-    });
-
-    return;
-  }
-});
-
-router.get("/getTimetable", async (req, res) => {
-  // if user didn't specify query: classTimetableLink = "o14.html"
-  // responds with status 400 and sends fail data and returns
-  if (!req.query.branchLink) {
-    res.status(400).json({
-      status: "failed",
-      notes:
-        "Please specify classTimetableLink query. For example ?classTimetableLink=o14.html",
-      error: "No classTimetableLink query specified.",
-    });
-
-    return;
-  }
-
-  const branchLink = req.query.branchLink;
-  let branchType: string;
-
-  if (typeof branchLink === "string" && /[o]/.test(branchLink)) {
-    branchType = "class";
-  } else if (typeof branchLink === "string" && /[n]/.test(branchLink)) {
-    branchType = "teacher";
-  } else if (typeof branchLink === "string" && /[s]/.test(branchLink)) {
-    branchType = "classroom";
-  } else {
-    res.status(400).json({
-      status: "failed",
-      notes:
-        "Please specify classTimetableLink query. For example ?classTimetableLink=o14.html",
-      error: "No classTimetableLink query specified.",
-    });
-
-    return;
-  }
-
-  // tries to fetch data from school schedule, then edit data and send to client
-  try {
-    const branchTimetableLink = `https://zsem.edu.pl/plany/plany/${branchLink}`;
-    const request = await fetch(branchTimetableLink);
-
-    let websiteData = await request.text();
-    websiteData.replace("<!DOCTYPE html>", "");
-
-    const root = parse(websiteData);
-    const lessonElements = root.querySelectorAll(".l"); //array of all the lessons in the week
-    const hourElements = root.querySelectorAll(".g"); //array of all the hours of the current schedule
-    const branchNameElement = root.querySelector(".tytulnapis");
-
-    // check if className exists if not responds with error and returns
-    // if it exists saves the text
-    if (branchNameElement.childNodes[0] === undefined) {
-      res.status(503).json({
-        status: "failed",
-        notes: "try again later",
-        error: "school server didn't respond",
-      });
-
+    const teachersElements: ParsedHTMLElement[] | null = getTeachersElements(schoolWebsiteData);
+    if (!teachersElements) {
+      res.status(404).json({ message: "No teachers found on the website." });
       return;
     }
-    const branchName = branchNameElement.childNodes[0].innerText;
+    const teachersData = getTeachersData(teachersElements);
 
-    // check if the lessons exist
-    // if not then send error response and return
-    if (lessonElements.length == 0) {
-      res.status(503).json({
-        status: "failed",
-        notes: "try again later",
-        error: "school server didn't respond",
-      });
-
+    const classesElements: ParsedHTMLElement[] | null = getClassesElements(schoolWebsiteData);
+    if (!classesElements) {
+      res.status(404).json({ message: "No classes found on the website." });
       return;
     }
+    const classesData = getClassesData(classesElements);
 
-    // creates schedule object that is later added to response object and sent via it
-    const scheduleObject: scheduleObject = {
-      branchName,
-      branchType,
-      branchFullLink: branchTimetableLink,
-      days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
-      daysLanguage: [],
-      hours: [],
-    };
-
-    // in future add language api
-    scheduleObject.daysLanguage = scheduleObject.days;
-
-    // adds the hours to the schedule object
-    hourElements.forEach((hourElement) => {
-      scheduleObject.hours.push(hourElement.innerText);
-    });
-
-    // for each day in the schedule.days array creates a new variable in schedule object => schedule[day]
-    scheduleObject.days.forEach((day, index) => {
-      scheduleObject[day] = [];
-
-      // the first lesson is index of current day and then its every 5th lesson after that, that's because
-      // the lessons aren't ordered in daily way but rather in left to right way => that's why its adding 5
-      // because there are 5 days in the week
-      for (
-        let i = index;
-        i < lessonElements.length;
-        i += lessonElements[i].parentNode.querySelectorAll(".l").length
-      ) {
-        // adds number of days                            ^^^^^
-        const lessonName = lessonElements[i].textContent;
-        const classBranches: string[] = []; // contains link for teacher's/classes or where the lesson will be
-
-        lessonElements[i].querySelectorAll("a").forEach((classBranch) => {
-          classBranches.push(classBranch.attributes.href);
-        });
-
-        // saves the lesson hour
-        const hour = {
-          start: lessonElements[i].parentNode
-            .querySelector(".g")
-            .childNodes[0].innerText.split("-")[0]
-            .trim(),
-          end: lessonElements[i].parentNode
-            .querySelector(".g")
-            .childNodes[0].innerText.split("-")[1]
-            .trim(),
-        };
-
-        const lessons = lessonName.split("\n");
-        const lessonsArr = [];
-
-        const branchType1 = {
-          teacher: {
-            classroom: 2,
-            subject: 1,
-            class: 0,
-            teacher: -1,
-          },
-          classroom: {
-            teacher: 0,
-            class: 1,
-            subject: 2,
-            classroom: -1,
-          },
-          class: {
-            teacher: 1,
-            classroom: 2,
-            class: -1,
-            subject: 0,
-          },
-        };
-
-        lessons.forEach((lesson) => {
-          const branchTypeChecker = branchType1[branchType];
-          lessonsArr.push({
-            subject: lesson.split(" ")[branchTypeChecker.subject],
-            class: {
-              name: lesson.split(" ")[branchTypeChecker.class],
-              link: classBranches.find((branch) => {
-                if (branch && branch.includes("o")) {
-                  classBranches[index] = "";
-                  return true;
-                }
-              }),
-            },
-            teacher: {
-              name: lesson.split(" ")[branchTypeChecker.teacher],
-              link: classBranches.find((branch) => {
-                if (branch && branch.includes("n")) {
-                  classBranches[index] = "";
-                  return true;
-                }
-              }),
-            },
-            classroom: {
-              name: lesson.split(" ")[branchTypeChecker.classroom],
-              link: classBranches.find((branch, index) => {
-                if (branch && branch.includes("s")) {
-                  classBranches[index] = "";
-                  return true;
-                }
-              }),
-            },
-          });
-        });
-
-        scheduleObject[day].push({
-          lessons: lessonsArr,
-          hour,
-        });
-      }
-    });
-
-    res.json({
-      status: "ok",
-      error: "",
-      notes: "data sent successfully",
-      data: scheduleObject,
-    });
-  } catch (error) {
-    console.log(error);
-
-    res.status(503).json({
-      status: "failed",
-      notes: "try again with correct class link",
-      error: "wrong class link",
-    });
-  }
-});
-
-router.get("/info", (req, res) => {
-  const workingAPIS: string[] = [];
-  router.stack.forEach((stack) => {
-    workingAPIS.push(stack.route.path);
-  });
-
-  res.status(200).json({
-    status: "ok",
-    workingLinksAPI: workingAPIS,
-  });
-});
-
-// gets all the branches and returns them (classes, teachers, rooms etc)
-async function getAllBranches(): Promise<classBranchesObject> {
-  // all the branches will be stored here
-  const branchesObject: classBranchesObject = {};
-
-  // tries to fetch
-  try {
-    const request = await fetch("https://zsem.edu.pl/plany/lista.html");
-    const websiteData = await request.text();
-    websiteData.replace("<!DOCTYPE html>", "");
-
-    const root = parse(websiteData);
-    const classBranchElements = root.querySelectorAll("a");
-
-    // check if classBranchElements exists, if not respond with error and return
-    if (classBranchElements.length == 0) {
-      return new error();
+    const classroomsElements: ParsedHTMLElement[] | null = getClassroomsElements(schoolWebsiteData);
+    if (!classroomsElements) {
+      res.status(404).json({ message: "No classrooms found on the website." });
+      return;
     }
+    const classroomData = getClassroomsData(classroomsElements);
 
-    classBranchElements.forEach((classBranch) => {
-      // check if classBranch has elements inside of it else return error
-      if (classBranch.childNodes[0] === undefined) {
-        return new error();
-      }
-
-      // the classBranchName is the whole class name for example 44, 2p 2programista etc
-      const classBranchName = classBranch.childNodes[0].innerText.trim();
-      // the key name of the object is the first word of the classBranchName
-      const classBranchesObjectKey = classBranchName.split(" ")[0];
-
-      branchesObject[classBranchesObjectKey] = {
-        link: classBranch.attributes.href.replace("plany/", ""),
-        // name is everything after the first word
-        name: classBranchName.substring(classBranchName.indexOf(" ") + 1),
-      };
-    });
-
-    return branchesObject;
-  } catch (error) {
-    return new error();
+    res.json({ classroomData, teachersData, classesData });
+  } catch (err) {
+    next(err);
   }
+})
+
+async function getWebsiteData(schoolLink = "https://zsem.edu.pl/plany/lista.html"): Promise<string> {
+  // Fetching data from specified school website
+  const request: globalThis.Response = await fetch(schoolLink);
+
+  // School website data in string format
+  const schoolWebsiteData: string = await request.text();
+
+  return schoolWebsiteData;
 }
+
+function getTeachersElements(schoolWebsiteData: string) {
+  const schoolWebsiteDOM = parse(schoolWebsiteData);
+
+  const list = schoolWebsiteDOM.querySelectorAll("ul")[1];
+  if (!list) return null;
+
+  const teachersList = list.querySelectorAll("a");
+  if (teachersList && teachersList.length <= 0) return null;
+
+  return teachersList;
+}
+
+function getClassesElements(schoolWebsiteData: string) {
+  const schoolWebsiteDOM = parse(schoolWebsiteData);
+
+  const list = schoolWebsiteDOM.querySelectorAll("ul")[0];
+  if (!list) return null;
+
+  const classList = list.querySelectorAll("a");
+  if (classList && classList.length <= 0) return null;
+
+  return classList;
+}
+
+function getClassroomsElements(schoolWebsiteData: string) {
+  const schoolWebsiteDOM = parse(schoolWebsiteData);
+
+  const list = schoolWebsiteDOM.querySelectorAll("ul")[2];
+  if (!list) return null;
+
+  const classroomList = list.querySelectorAll("a");
+  if (classroomList && classroomList.length <= 0) return null;
+
+  return classroomList;
+}
+
+function getClassesData(classesElements: ParsedHTMLElement[]): ClassData[] {
+  const classesData: ClassData[] = [];
+  classesElements.forEach((classElement: ParsedHTMLElement) => {
+    if (classElement && classElement.attributes.href) {
+      const wholeName: string = classElement.text.trim();
+      const link: string = classElement.attributes.href;
+
+      const singleClassData: ClassData = new ClassData(wholeName, link);
+      singleClassData.generateClassName().generateProfileName().generateYear();
+
+      classesData.push(singleClassData);
+    }
+  });
+
+  return classesData;
+}
+
+function getClassroomsData(classroomsElements: ParsedHTMLElement[]): ClassroomData[] {
+  const classroomsData: ClassroomData[] = [];
+  classroomsElements.forEach((classroomElement: ParsedHTMLElement) => {
+    if (classroomElement && classroomElement.attributes.href) {
+      const wholeName: string = classroomElement.text.trim();
+      const link: string = classroomElement.attributes.href;
+
+      const singleClassroomData: ClassroomData = new ClassroomData(wholeName, link);
+      singleClassroomData.generateShortName().generateLongName();
+
+      classroomsData.push(singleClassroomData);
+    }
+  });
+
+  return classroomsData;
+}
+
+function getTeachersData(teachersElements: ParsedHTMLElement[]): TeacherData[] {
+  const teachersData: TeacherData[] = [];
+  teachersElements.forEach((teacherElement: ParsedHTMLElement) => {
+    if (teacherElement && teacherElement.attributes.href) {
+      const wholeName: string = teacherElement.text.trim();
+      const link: string = teacherElement.attributes.href;
+
+      const singleTeacherData: TeacherData = new TeacherData(wholeName, link);
+      singleTeacherData.generateShortName().generateLongName();
+
+      teachersData.push(singleTeacherData);
+    }
+  });
+
+  return teachersData;
+}
+
+router.use((error: unknown, req: Request, res: Response, next: NextFunction): void => {
+  console.log(error);
+  res.status(500).json({
+    status: "failed",
+    notes: "internal server error",
+    error: error,
+  });
+});
 
 export default router;
