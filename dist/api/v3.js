@@ -117,8 +117,13 @@ class ClassLesson extends Lesson {
     generateTeacherData() {
         if (!this.wholeName.split(" ")[1])
             return this;
-        if (!this.attributes || !this.attributes[0])
+        if (!this.attributes || !this.attributes[0]) {
+            this.teacherData = {
+                shortName: this.wholeName.split(" ")[1],
+            };
             return this;
+        }
+        ;
         this.teacherData = {
             shortName: this.wholeName.split(" ")[1],
             link: this.attributes[0],
@@ -128,8 +133,13 @@ class ClassLesson extends Lesson {
     generateClassroomData() {
         if (!this.wholeName.split(" ")[2])
             return this;
-        if (!this.attributes || !this.attributes[1])
+        if (!this.attributes || !this.attributes[1]) {
+            this.classroomData = {
+                shortName: this.wholeName.split(" ")[2],
+            };
             return this;
+        }
+        ;
         this.classroomData = {
             shortName: this.wholeName.split(" ")[2],
             link: this.attributes[1],
@@ -150,8 +160,13 @@ class TeacherLesson extends Lesson {
     generateClassData() {
         if (!this.wholeName.split(" ")[0])
             return this;
-        if (!this.attributes || !this.attributes[0])
+        if (!this.attributes || !this.attributes[0]) {
+            this.classData = {
+                shortName: this.wholeName.split(" ")[0],
+            };
             return this;
+        }
+        ;
         this.classData = {
             shortName: this.wholeName.split(" ")[0],
             link: this.attributes[0],
@@ -161,8 +176,13 @@ class TeacherLesson extends Lesson {
     generateClassroomData() {
         if (!this.wholeName.split(" ")[2])
             return this;
-        if (!this.attributes || !this.attributes[1])
+        if (!this.attributes || !this.attributes[1]) {
+            this.classroomData = {
+                shortName: this.wholeName.split(" ")[2],
+            };
             return this;
+        }
+        ;
         this.classroomData = {
             shortName: this.wholeName.split(" ")[2],
             link: this.attributes[1],
@@ -183,8 +203,13 @@ class classroomLesson extends Lesson {
     generateClassData() {
         if (!this.wholeName.split(" ")[1])
             return this;
-        if (!this.attributes || !this.attributes[1])
+        if (!this.attributes || !this.attributes[1]) {
+            this.classData = {
+                shortName: this.wholeName.split(" ")[1],
+            };
             return this;
+        }
+        ;
         this.classData = {
             shortName: this.wholeName.split(" ")[1],
             link: this.attributes[1],
@@ -194,8 +219,13 @@ class classroomLesson extends Lesson {
     generateTeacherData() {
         if (!this.wholeName.split(" ")[0])
             return this;
-        if (!this.attributes || !this.attributes[0])
+        if (!this.attributes || !this.attributes[0]) {
+            this.teacherData = {
+                shortName: this.wholeName.split(" ")[0],
+            };
             return this;
+        }
+        ;
         this.teacherData = {
             shortName: this.wholeName.split(" ")[0],
             link: this.attributes[0],
@@ -205,7 +235,11 @@ class classroomLesson extends Lesson {
 }
 const router = express.Router();
 router.get("/specifiedTimetable", async (req, res, next) => {
-    const link = "https://zsem.edu.pl/plany/plany/s20.html";
+    const link = req.query.link?.toString();
+    if (!link) {
+        res.status(400).json({ message: "Please provide a valid link." });
+        return;
+    }
     const branchType = link.substring(link.lastIndexOf("/") + 1)[0];
     try {
         const timetableWebsiteData = await getWebsiteData(link);
@@ -222,9 +256,13 @@ router.get("/specifiedTimetable", async (req, res, next) => {
     }
 });
 router.get("/allBranches", async (req, res, next) => {
+    const link = req.query.link?.toString();
+    if (!link) {
+        res.status(400).json({ message: "Please provide a valid link." });
+    }
     try {
         const responseObject = { classesData: [] };
-        const schoolWebsiteData = await getWebsiteData();
+        const schoolWebsiteData = await getWebsiteData(link);
         const teachersElements = getSpecifiedElements(schoolWebsiteData, 1);
         if (teachersElements) {
             const teachersData = getTeachersData(teachersElements);
@@ -374,4 +412,4 @@ router.use((error, req, res, next) => {
     });
 });
 export default router;
-//# sourceMappingURL=v2.js.map
+//# sourceMappingURL=v3.js.map

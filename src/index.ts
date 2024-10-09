@@ -16,10 +16,8 @@ app.use((req, res, next) => {
 });
 
 // importing modules
-// import routerAPIv1 from "./api/v1.js";
-import routerAPIv2 from "./api/v2.js";
-// app.use("/api/v1", routerAPIv1);
-app.use("/api/v2", routerAPIv2);
+import routerAPIv3 from "./api/v3.js";
+app.use("/api/v3", routerAPIv3);
 
 app.listen(PORT, () => {
   console.log(`App running on: localhost:${PORT}`);
