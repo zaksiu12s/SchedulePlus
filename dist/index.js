@@ -13,10 +13,8 @@ app.use((req, res, next) => {
     next();
 });
 // importing modules
-import routerApiV1 from "./api/v1.js";
-import routerAPIV2 from "./api/v2.js";
-app.use("/api/v1", routerApiV1);
-app.use("/api/v2", routerAPIV2);
+import routerAPIv3 from "./api/v3.js";
+app.use("/api/v3", routerAPIv3);
 app.listen(PORT, () => {
     console.log(`App running on: localhost:${PORT}`);
 });
