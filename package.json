@@ -5,10 +5,9 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "app": "nodemon dist/index.js",
-    "build": "tsc --watch",
-    "dev": "npm-run-all --parallel build app"
-  },
+  "build": "tsc",
+  "start": "node dist/server.js"
+}
   "keywords": [],
   "author": "github.com/zaksiu12s",
   "license": "ISC",
