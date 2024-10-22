@@ -1,19 +1,30 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, response } from "express";
 import { parse, HTMLElement as ParsedHTMLElement } from "node-html-parser";
-import "dotenv/config";
 
-class ClassroomData {
-  private wholeName: string;
-  private link: string;
-  private shortName?: string;
-  private longName?: string;
+class BranchData {
+  protected wholeName: string;
+  protected link: string;
+  protected shortName?: string;
+  protected longName?: string;
+
+  public generateShortName() { return this };
+  public generateLongName() { return this };
+  public generateProfileName() { return this; };
+  public generateClassName() { return this };
+  public generateYear() { return this };
 
   constructor(wholeName: string, link: string) {
     this.wholeName = wholeName;
     this.link = link.substring(link.indexOf("/") + 1);
   }
+}
 
-  public generateShortName(): this {
+class ClassroomData extends BranchData {
+  constructor(wholeName: string, link: string) {
+    super(wholeName, link);
+  }
+
+  override generateShortName(): this {
     if (this.wholeName.indexOf(" ") == -1) return this;
 
     const shortName: string = this.wholeName.substring(0, this.wholeName.indexOf(" "));
@@ -22,7 +33,7 @@ class ClassroomData {
     return this;
   }
 
-  public generateLongName(): this {
+  override generateLongName(): this {
     if (this.wholeName.indexOf(" ") == -1) return this;
 
     const longName: string = this.wholeName.substring(this.wholeName.indexOf(" ") + 1);
@@ -32,18 +43,12 @@ class ClassroomData {
   }
 }
 
-class TeacherData {
-  private wholeName: string;
-  private link: string;
-  private shortName?: string;
-  private longName?: string;
-
+class TeacherData extends BranchData {
   constructor(wholeName: string, link: string) {
-    this.wholeName = wholeName;
-    this.link = link.substring(link.indexOf("/") + 1);
-  };
+    super(wholeName, link);
+  }
 
-  public generateShortName(): this {
+  override generateShortName(): this {
     if (this.wholeName.indexOf("(") == -1 || this.wholeName.indexOf(")") == -1) return this;
 
     const shortNameStart: number = this.wholeName.indexOf("(") + 1;
@@ -55,7 +60,7 @@ class TeacherData {
     return this;
   }
 
-  public generateLongName(): this {
+  override generateLongName(): this {
     if (this.wholeName.indexOf("(") == -1) return this;
 
     const longNameEnd: number = this.wholeName.indexOf("(");
@@ -67,19 +72,15 @@ class TeacherData {
   }
 }
 
-class ClassData {
-  private wholeName: string;
-  private link: string;
+class ClassData extends BranchData {
+  private year?: number;
   private className?: string;
   private profileName?: string;
-  private year?: number;
 
   constructor(wholeName: string, link: string) {
-    this.wholeName = wholeName;
-    this.link = link.substring(link.indexOf("/") + 1);
+    super(wholeName, link);
   }
-
-  public generateClassName(): this {
+  override generateClassName(): this {
     if (this.wholeName.indexOf(" ") == -1) return this;
 
     const classNameEnd = this.wholeName.indexOf(" ")
@@ -88,7 +89,7 @@ class ClassData {
     return this;
   }
 
-  public generateProfileName(): this {
+  override generateProfileName(): this {
     if (this.wholeName.indexOf(" ") == -1) return this;
 
     // Adding 2 because the profile name is like: 2informatyk so as to delete the 2 in front
@@ -98,7 +99,7 @@ class ClassData {
     return this;
   }
 
-  public generateYear(): this {
+  override generateYear(): this {
     if (this.wholeName.indexOf(" ") == -1) return this;
 
     const yearStart = this.wholeName.indexOf(" ") + 1;
@@ -113,37 +114,76 @@ class ClassData {
   }
 }
 
+interface LessonGetData {
+  wholeName: string,
+  lessonNumber: number | undefined,
+  teacherData: {
+    shortName: string | undefined;
+    link?: string | undefined;
+  } | undefined | {
+    shortName: string | undefined;
+    link?: string | undefined;
+  }[],
+  classroomData: {
+    shortName: string | undefined,
+    link?: string | undefined,
+  } | undefined | {
+    shortName: string | undefined,
+    link?: string | undefined,
+  }[],
+  classData: {
+    shortName: string | undefined,
+    link?: string | undefined,
+  } | undefined | {
+    shortName: string | undefined,
+    link?: string | undefined,
+  }[],
+  subject: string | undefined | string[],
+  attributes: string[] | undefined,
+  wholeHour: string | undefined,
+  startHour: string | undefined,
+  endHour: string | undefined,
+  dayNumber: number | undefined,
+}
+
 class Lesson {
-  protected dayNumber: number;
+  readonly schoolDays: number = 5;
+
+  private lesson: ParsedHTMLElement;
   protected wholeName: string;
-  protected lessonNumber?: number;
+  private lessonNumber?: number;
   protected teacherData?: {
     shortName: string | undefined;
     link?: string | undefined;
-  };
+  } | {
+    shortName: string | undefined;
+    link?: string | undefined;
+  }[];
   protected classroomData?: {
     shortName: string | undefined,
     link?: string | undefined,
-  }
+  } | {
+    shortName: string | undefined,
+    link?: string | undefined,
+  }[]
   protected classData?: {
     shortName: string | undefined,
     link?: string | undefined,
-  }
-  protected subject?: string | undefined;
+  } | {
+    shortName: string | undefined,
+    link?: string | undefined,
+  }[]
+  protected subject?: string | undefined | string[];
   protected attributes?: string[];
-  protected wholeHour?: string;
-  protected startHour?: string;
-  protected endHour?: string;
+  private wholeHour?: string;
+  private startHour?: string;
+  private endHour?: string;
+  private dayNumber?: number;
 
-  public generateSubject() { return this };
-  public generateClassroomData() { return this };
-  public generateTeacherData() { return this };
-  public generateClassData() { return this };
-
-  constructor(dayNumber: number, wholeName: string, lessonNumber?: number, attributes?: string[], wholeHour?: string) {
-    this.dayNumber = dayNumber;
+  constructor(lesson: ParsedHTMLElement, wholeName: string, lessonNumber?: number, attributes?: string[], wholeHour?: string) {
+    this.lesson = lesson;
     if (lessonNumber && !isNaN(lessonNumber)) this.lessonNumber = lessonNumber - 1;
-    this.wholeName = wholeName.replace("\n", "");
+    this.wholeName = wholeName.replace("\n", " \n ").trim();
     if (attributes && attributes.length > 0) this.attributes = attributes;
     if (wholeHour) {
       this.wholeHour = wholeHour.trim();
@@ -154,11 +194,37 @@ class Lesson {
       }
     }
   }
+
+  public divideToGroups() { }
+  public generateSubject(): this { return this };
+  public generateClassroomData(): this { return this };
+  public generateTeacherData(): this { return this };
+  public generateClassData(): this { return this };
+  public setDayNumber(dayNumber: number): this {
+    this.dayNumber = dayNumber % 5;
+
+    return this;
+  }
+  public getData(): LessonGetData {
+    return {
+      wholeName: this.wholeName,
+      lessonNumber: this.lessonNumber,
+      teacherData: this.teacherData,
+      classroomData: this.classroomData,
+      classData: this.classData,
+      subject: this.subject,
+      attributes: this.attributes,
+      wholeHour: this.wholeHour,
+      startHour: this.startHour,
+      endHour: this.endHour,
+      dayNumber: this.dayNumber,
+    }
+  }
 }
 
 class ClassLesson extends Lesson {
-  constructor(dayNumber: number, wholeName: string, lessonNumber: number, attributes?: string[], wholeHour?: string) {
-    super(dayNumber, wholeName, lessonNumber, attributes, wholeHour);
+  constructor(lesson: ParsedHTMLElement, wholeName: string, lessonNumber: number, attributes?: string[], wholeHour?: string) {
+    super(lesson, wholeName, lessonNumber, attributes, wholeHour);
   }
 
   override generateSubject(): this {
@@ -168,7 +234,6 @@ class ClassLesson extends Lesson {
 
     return this;
   }
-
   override generateTeacherData(): this {
     if (!this.wholeName.split(" ")[1]) return this;
     if (!this.attributes || !this.attributes[0]) {
@@ -183,6 +248,49 @@ class ClassLesson extends Lesson {
       shortName: this.wholeName.split(" ")[1],
       link: this.attributes[0],
     }
+
+    return this;
+  }
+
+  override divideToGroups(): this {
+    if (!this.wholeName.split("\n")[1]) return this;
+    if (!this.attributes || !this.attributes[2]) return this;
+
+    const teacherDataArray: { shortName: string, link?: string | undefined }[] = [];
+    this.wholeName.split("\n").forEach((group, index) => {
+      const split = group.trim().split(" ")[1];
+      const attributes = this.attributes;
+      if (split !== undefined && attributes && (index * 2) in attributes) {
+        teacherDataArray.push({
+          shortName: split.trim(),
+        });
+      };
+    })
+
+    this.teacherData = teacherDataArray;
+
+    const classroomDataArray: { shortName: string, link?: string | undefined }[] = [];
+    this.wholeName.split("\n").forEach((group) => {
+      const split = group.trim().split(" ")[2];
+      if (split) {
+        classroomDataArray.push({
+          shortName: split.trim(),
+        });
+      };
+    })
+
+    this.classroomData = classroomDataArray;
+
+    const subjectArray: string[] = [];
+    this.wholeName.split("\n").forEach((group) => {
+      const split = group.trim().split(" ")[0];
+
+      if (split) {
+        subjectArray.push(split);
+      }
+    })
+
+    this.subject = subjectArray;
 
     return this;
   }
@@ -207,8 +315,8 @@ class ClassLesson extends Lesson {
 }
 
 class TeacherLesson extends Lesson {
-  constructor(dayNumber: number, wholeName: string, lessonNumber: number, attributes?: string[], wholeHour?: string) {
-    super(dayNumber, wholeName, lessonNumber, attributes, wholeHour);
+  constructor(lesson: ParsedHTMLElement, wholeName: string, lessonNumber: number, attributes?: string[], wholeHour?: string) {
+    super(lesson, wholeName, lessonNumber, attributes, wholeHour);
   }
 
   override generateSubject(): this {
@@ -256,9 +364,9 @@ class TeacherLesson extends Lesson {
   }
 }
 
-class classroomLesson extends Lesson {
-  constructor(dayNumber: number, wholeName: string, lessonNumber: number, attributes?: string[], wholeHour?: string) {
-    super(dayNumber, wholeName, lessonNumber, attributes, wholeHour);
+class ClassroomLesson extends Lesson {
+  constructor(lesson: ParsedHTMLElement, wholeName: string, lessonNumber: number, attributes?: string[], wholeHour?: string) {
+    super(lesson, wholeName, lessonNumber, attributes, wholeHour);
   }
 
   override generateSubject(): this {
@@ -309,6 +417,7 @@ const router = express.Router();
 
 router.get("/specifiedTimetable", async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const link: string | undefined = req.query.link?.toString();
+  const formatAsDays: boolean = (req.query.formatAsDays == "true");
 
   if (!link) {
     res.status(400).json({ message: "Please provide a valid link." });
@@ -316,18 +425,43 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
   }
 
   const branchType: string | undefined = link.substring(link.lastIndexOf("/") + 1)[0];
+  if (!branchType || (branchType !== "n" && branchType !== "s" && branchType !== "o")) {
+    res.status(400).json({ message: "Please provide a valid link." });
+    return;
+  }
+
   try {
-    const timetableWebsiteData = await getWebsiteData(link);
+    const timetableWebsiteData: string = await getWebsiteData(link);
 
-    const lessons: ParsedHTMLElement[] = getLessons(timetableWebsiteData);
-    const lessonsByDay: (ParsedHTMLElement | undefined)[][] = getLessonsByDay(lessons);
+    const lessonElements: ParsedHTMLElement[] = getLessonElements(timetableWebsiteData);
+    const lessonsAsObjects: Lesson[] = getLessonsAsObject(lessonElements, branchType);
 
-    const lessonsAsObjects: Lesson[][] = getLessonsAsObject(lessonsByDay, branchType);
+    if (!formatAsDays) {
+      const responseObject: LessonGetData[] = [];
 
-    // If lesson is for classes
-    addDataToClassLessons(lessonsAsObjects as Lesson[][]);
+      lessonsAsObjects.forEach((lesson: Lesson, index: number) => {
+        lesson.setDayNumber(index);
+        responseObject.push(lesson.getData());
+      })
 
-    res.send(lessonsAsObjects);
+      res.send(responseObject);
+    }
+
+    if (formatAsDays) {
+      const responseObject: (LessonGetData | undefined)[][] = [];
+      const schoolDays = 5;
+
+      for (let i = 0; i < schoolDays; i++) {
+        const currentDayLessons: (LessonGetData | undefined)[] = [];
+        for (let j = i; j < lessonsAsObjects.length; j += 5) {
+          currentDayLessons.push(lessonsAsObjects[j]?.setDayNumber(i).getData());
+        }
+
+        responseObject.push(currentDayLessons);
+      }
+
+      res.send(responseObject);
+    }
   } catch (err) {
     next(err);
     return;
@@ -342,31 +476,15 @@ router.get("/allBranches", async (req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const responseObject: {
-      teachersData?: TeacherData[],
-      classesData: ClassData[],
-      classroomsData?: ClassroomData[]
-    } = { classesData: [] };
+    const responseObject: BranchData[][] = [];
     const schoolWebsiteData: string = await getWebsiteData(link);
 
-    const teachersElements: ParsedHTMLElement[] | null = getSpecifiedElements(schoolWebsiteData, 1);
-    if (teachersElements) {
-      const teachersData: TeacherData[] = getTeachersData(teachersElements);
-      responseObject.teachersData = teachersData;
-    }
-
-    const classesElements: ParsedHTMLElement[] | null = getSpecifiedElements(schoolWebsiteData, 0);
-    if (!classesElements) {
-      res.status(404).json({ message: "No classes found on the website." });
-      return;
-    }
-    const classesData: ClassData[] = getClassesData(classesElements);
-    responseObject.classesData = classesData;
-
-    const classroomsElements: ParsedHTMLElement[] | null = getSpecifiedElements(schoolWebsiteData, 2);
-    if (classroomsElements) {
-      const classroomData: ClassroomData[] = getClassroomsData(classroomsElements);
-      responseObject.classroomsData = classroomData;
+    for (let i = 0; i <= 2; i++) {
+      const branchElements: ParsedHTMLElement[] | null = getSpecifiedElements(schoolWebsiteData, i);
+      if (branchElements) {
+        const branchData: BranchData[] = getBranchData(branchElements, i);
+        responseObject[i] = branchData;
+      }
     }
 
     res.json(responseObject);
@@ -375,81 +493,6 @@ router.get("/allBranches", async (req: Request, res: Response, next: NextFunctio
   }
 })
 
-function addDataToClassLessons(lessons: Lesson[][]): void {
-  lessons.forEach((day: Lesson[]): void => {
-    day.forEach((lesson: Lesson) => {
-      lesson.generateSubject().generateTeacherData().generateClassroomData().generateClassData();
-    })
-  })
-}
-
-function getLessonsAsObject(lessonsByDay: (ParsedHTMLElement | undefined)[][], branchType: string | undefined): Lesson[][] {
-  const lessonsAsObjects: Lesson[][] = []
-
-  lessonsByDay.forEach((day: (ParsedHTMLElement | undefined)[], dayNumber: number) => {
-    const daysArray: Lesson[] = [];
-
-    day.forEach((lesson: ParsedHTMLElement | undefined) => {
-      if (lesson) {
-        const links = lesson.querySelectorAll('a');
-        const attributes: string[] = [];
-        links.forEach(link => {
-          if (link && link.attributes && link.attributes.href) {
-            attributes.push(link.attributes.href);
-          }
-        });
-
-        const lessonNumber: number | undefined = Number(lesson.parentNode.querySelector('.nr')?.innerText);
-
-        const hour: string | undefined = lesson.parentNode.querySelector('.g')?.innerText;
-
-        if (branchType == "o") {
-          daysArray.push(new ClassLesson(dayNumber, lesson.innerText, lessonNumber, attributes, hour));
-        }
-        if (branchType == "n") {
-          daysArray.push(new TeacherLesson(dayNumber, lesson.innerText, lessonNumber, attributes, hour));
-        }
-        if (branchType == "s") {
-          daysArray.push(new classroomLesson(dayNumber, lesson.innerText, lessonNumber, attributes, hour));
-        }
-      }
-    })
-
-    lessonsAsObjects.push(daysArray);
-  })
-
-  return lessonsAsObjects;
-}
-
-function getLessons(timetableWebsiteData: string): ParsedHTMLElement[] {
-  const timetableWebsiteDOM: ParsedHTMLElement = parse(timetableWebsiteData);
-
-  const lessons: ParsedHTMLElement[] = [];
-
-  const lessonsElements: ParsedHTMLElement[] = timetableWebsiteDOM.querySelectorAll("td.l");
-  lessonsElements.forEach(lessonElement => {
-    lessons.push(lessonElement);
-  })
-
-  return lessons;
-}
-
-function getLessonsByDay(lessons: ParsedHTMLElement[]): (ParsedHTMLElement | undefined)[][] {
-  const schoolDays: number = 5;
-  const lessonsByDayObject: (ParsedHTMLElement | undefined)[][] = [];
-
-  for (let i = 0; i < schoolDays; i++) {
-    const currentDayLessons: (ParsedHTMLElement | undefined)[] = [];
-    for (let j = i; j < lessons.length; j += 5) {
-      currentDayLessons.push(lessons[j]);
-    }
-
-    lessonsByDayObject.push(currentDayLessons);
-  }
-
-  return lessonsByDayObject;
-}
-
 async function getWebsiteData(schoolLink = "https://zsem.edu.pl/plany/lista.html"): Promise<string> {
   // Fetching data from specified school website
   const request: globalThis.Response = await fetch(schoolLink);
@@ -457,6 +500,57 @@ async function getWebsiteData(schoolLink = "https://zsem.edu.pl/plany/lista.html
   // School website data in string format
   const schoolWebsiteData: string = await request.text();
   return schoolWebsiteData;
+}
+
+function getLessonsAsObject(lessonsByDay: (ParsedHTMLElement | undefined)[], branchType: "o" | "n" | "s" | undefined): Lesson[] {
+  const lessonsAsObjects: Lesson[] = []
+
+  lessonsByDay.forEach((lesson: ParsedHTMLElement | undefined) => {
+    if (lesson) {
+      const links: ParsedHTMLElement[] = lesson.querySelectorAll('a');
+      const attributes: string[] = [];
+      links.forEach((link: ParsedHTMLElement) => {
+        if (link.attributes && link.attributes.href) {
+          attributes.push(link.attributes.href);
+        }
+      });
+
+      const lessonNumber: number | undefined = Number(lesson.parentNode.querySelector('.nr')?.innerText);
+
+      const hour: string | undefined = lesson.parentNode.querySelector('.g')?.innerText;
+
+      let lessonObject;
+      if (branchType == "o") {
+        lessonObject = new ClassLesson(lesson, lesson.innerText, lessonNumber, attributes, hour);
+      }
+      if (branchType == "n") {
+        lessonObject = new TeacherLesson(lesson, lesson.innerText, lessonNumber, attributes, hour);
+      }
+      if (branchType == "s") {
+        lessonObject = new ClassroomLesson(lesson, lesson.innerText, lessonNumber, attributes, hour);
+      }
+
+      if (lessonObject !== undefined) {
+        lessonObject.generateTeacherData().generateSubject().generateClassroomData().generateClassData().divideToGroups();
+        lessonsAsObjects.push(lessonObject);
+      }
+    }
+  })
+
+  return lessonsAsObjects;
+}
+
+function getLessonElements(timetableWebsiteData: string): ParsedHTMLElement[] {
+  const timetableWebsiteDOM: ParsedHTMLElement = parse(timetableWebsiteData);
+
+  const lessons: ParsedHTMLElement[] = [];
+
+  const lessonsElements: ParsedHTMLElement[] = timetableWebsiteDOM.querySelectorAll("td.l");
+  lessonsElements.forEach((lessonElement: ParsedHTMLElement) => {
+    lessons.push(lessonElement);
+  })
+
+  return lessons;
 }
 
 function getSpecifiedElements(schoolWebsiteData: string, elementsType: number): ParsedHTMLElement[] | null {
@@ -474,55 +568,35 @@ function getSpecifiedElements(schoolWebsiteData: string, elementsType: number): 
   return specifiedList;
 }
 
-function getClassesData(classesElements: ParsedHTMLElement[]): ClassData[] {
+function getBranchData(classesElements: ParsedHTMLElement[], branchType: number): BranchData[] {
   const classesData: ClassData[] = [];
   classesElements.forEach((classElement: ParsedHTMLElement) => {
     if (classElement && classElement.attributes.href) {
       const wholeName: string = classElement.text.trim();
       const link: string = classElement.attributes.href;
 
-      const singleClassData: ClassData = new ClassData(wholeName, link);
-      singleClassData.generateClassName().generateProfileName().generateYear();
+      let singleClassData: BranchData;
 
-      classesData.push(singleClassData);
+      if (branchType == 0) {
+        singleClassData = new ClassData(wholeName, link);
+        singleClassData.generateClassName().generateProfileName().generateYear().generateShortName().generateLongName();
+
+        classesData.push(singleClassData);
+      } else if (branchType == 1) {
+        singleClassData = new TeacherData(wholeName, link);
+        singleClassData.generateClassName().generateProfileName().generateYear().generateShortName().generateLongName();
+
+        classesData.push(singleClassData);
+      } else if (branchType == 2) {
+        singleClassData = new ClassroomData(wholeName, link);
+        singleClassData.generateClassName().generateProfileName().generateYear().generateShortName().generateLongName();
+
+        classesData.push(singleClassData);
+      }
     }
   });
 
   return classesData;
-}
-
-function getClassroomsData(classroomsElements: ParsedHTMLElement[]): ClassroomData[] {
-  const classroomsData: ClassroomData[] = [];
-  classroomsElements.forEach((classroomElement: ParsedHTMLElement) => {
-    if (classroomElement && classroomElement.attributes.href) {
-      const wholeName: string = classroomElement.text.trim();
-      const link: string = classroomElement.attributes.href;
-
-      const singleClassroomData: ClassroomData = new ClassroomData(wholeName, link);
-      singleClassroomData.generateShortName().generateLongName();
-
-      classroomsData.push(singleClassroomData);
-    }
-  });
-
-  return classroomsData;
-}
-
-function getTeachersData(teachersElements: ParsedHTMLElement[]): TeacherData[] {
-  const teachersData: TeacherData[] = [];
-  teachersElements.forEach((teacherElement: ParsedHTMLElement) => {
-    if (teacherElement && teacherElement.attributes.href) {
-      const wholeName: string = teacherElement.text.trim();
-      const link: string = teacherElement.attributes.href;
-
-      const singleTeacherData: TeacherData = new TeacherData(wholeName, link);
-      singleTeacherData.generateShortName().generateLongName();
-
-      teachersData.push(singleTeacherData);
-    }
-  });
-
-  return teachersData;
 }
 
 router.use((error: unknown, req: Request, res: Response, next: NextFunction): void => {

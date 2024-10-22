@@ -1,10 +1,24 @@
 import express from "express";
 import { parse } from "node-html-parser";
-import "dotenv/config";
-class ClassroomData {
+class BranchData {
+    generateShortName() { return this; }
+    ;
+    generateLongName() { return this; }
+    ;
+    generateProfileName() { return this; }
+    ;
+    generateClassName() { return this; }
+    ;
+    generateYear() { return this; }
+    ;
     constructor(wholeName, link) {
         this.wholeName = wholeName;
         this.link = link.substring(link.indexOf("/") + 1);
+    }
+}
+class ClassroomData extends BranchData {
+    constructor(wholeName, link) {
+        super(wholeName, link);
     }
     generateShortName() {
         if (this.wholeName.indexOf(" ") == -1)
@@ -21,12 +35,10 @@ class ClassroomData {
         return this;
     }
 }
-class TeacherData {
+class TeacherData extends BranchData {
     constructor(wholeName, link) {
-        this.wholeName = wholeName;
-        this.link = link.substring(link.indexOf("/") + 1);
+        super(wholeName, link);
     }
-    ;
     generateShortName() {
         if (this.wholeName.indexOf("(") == -1 || this.wholeName.indexOf(")") == -1)
             return this;
@@ -45,10 +57,9 @@ class TeacherData {
         return this;
     }
 }
-class ClassData {
+class ClassData extends BranchData {
     constructor(wholeName, link) {
-        this.wholeName = wholeName;
-        this.link = link.substring(link.indexOf("/") + 1);
+        super(wholeName, link);
     }
     generateClassName() {
         if (this.wholeName.indexOf(" ") == -1)
@@ -79,19 +90,12 @@ class ClassData {
     }
 }
 class Lesson {
-    generateSubject() { return this; }
-    ;
-    generateClassroomData() { return this; }
-    ;
-    generateTeacherData() { return this; }
-    ;
-    generateClassData() { return this; }
-    ;
-    constructor(dayNumber, wholeName, lessonNumber, attributes, wholeHour) {
-        this.dayNumber = dayNumber;
+    constructor(lesson, wholeName, lessonNumber, attributes, wholeHour) {
+        this.schoolDays = 5;
+        this.lesson = lesson;
         if (lessonNumber && !isNaN(lessonNumber))
             this.lessonNumber = lessonNumber - 1;
-        this.wholeName = wholeName.replace("\n", "");
+        this.wholeName = wholeName.replace("\n", " \n ").trim();
         if (attributes && attributes.length > 0)
             this.attributes = attributes;
         if (wholeHour) {
@@ -103,10 +107,38 @@ class Lesson {
             }
         }
     }
+    divideToGroups() { }
+    generateSubject() { return this; }
+    ;
+    generateClassroomData() { return this; }
+    ;
+    generateTeacherData() { return this; }
+    ;
+    generateClassData() { return this; }
+    ;
+    setDayNumber(dayNumber) {
+        this.dayNumber = dayNumber % 5;
+        return this;
+    }
+    getData() {
+        return {
+            wholeName: this.wholeName,
+            lessonNumber: this.lessonNumber,
+            teacherData: this.teacherData,
+            classroomData: this.classroomData,
+            classData: this.classData,
+            subject: this.subject,
+            attributes: this.attributes,
+            wholeHour: this.wholeHour,
+            startHour: this.startHour,
+            endHour: this.endHour,
+            dayNumber: this.dayNumber,
+        };
+    }
 }
 class ClassLesson extends Lesson {
-    constructor(dayNumber, wholeName, lessonNumber, attributes, wholeHour) {
-        super(dayNumber, wholeName, lessonNumber, attributes, wholeHour);
+    constructor(lesson, wholeName, lessonNumber, attributes, wholeHour) {
+        super(lesson, wholeName, lessonNumber, attributes, wholeHour);
     }
     generateSubject() {
         if (!this.wholeName.split(" ")[0])
@@ -130,6 +162,44 @@ class ClassLesson extends Lesson {
         };
         return this;
     }
+    divideToGroups() {
+        if (!this.wholeName.split("\n")[1])
+            return this;
+        if (!this.attributes || !this.attributes[2])
+            return this;
+        const teacherDataArray = [];
+        this.wholeName.split("\n").forEach((group, index) => {
+            const split = group.trim().split(" ")[1];
+            const attributes = this.attributes;
+            if (split !== undefined && attributes && (index * 2) in attributes) {
+                teacherDataArray.push({
+                    shortName: split.trim(),
+                });
+            }
+            ;
+        });
+        this.teacherData = teacherDataArray;
+        const classroomDataArray = [];
+        this.wholeName.split("\n").forEach((group) => {
+            const split = group.trim().split(" ")[2];
+            if (split) {
+                classroomDataArray.push({
+                    shortName: split.trim(),
+                });
+            }
+            ;
+        });
+        this.classroomData = classroomDataArray;
+        const subjectArray = [];
+        this.wholeName.split("\n").forEach((group) => {
+            const split = group.trim().split(" ")[0];
+            if (split) {
+                subjectArray.push(split);
+            }
+        });
+        this.subject = subjectArray;
+        return this;
+    }
     generateClassroomData() {
         if (!this.wholeName.split(" ")[2])
             return this;
@@ -148,8 +218,8 @@ class ClassLesson extends Lesson {
     }
 }
 class TeacherLesson extends Lesson {
-    constructor(dayNumber, wholeName, lessonNumber, attributes, wholeHour) {
-        super(dayNumber, wholeName, lessonNumber, attributes, wholeHour);
+    constructor(lesson, wholeName, lessonNumber, attributes, wholeHour) {
+        super(lesson, wholeName, lessonNumber, attributes, wholeHour);
     }
     generateSubject() {
         if (!this.wholeName.split(" ")[1])
@@ -190,9 +260,9 @@ class TeacherLesson extends Lesson {
         return this;
     }
 }
-class classroomLesson extends Lesson {
-    constructor(dayNumber, wholeName, lessonNumber, attributes, wholeHour) {
-        super(dayNumber, wholeName, lessonNumber, attributes, wholeHour);
+class ClassroomLesson extends Lesson {
+    constructor(lesson, wholeName, lessonNumber, attributes, wholeHour) {
+        super(lesson, wholeName, lessonNumber, attributes, wholeHour);
     }
     generateSubject() {
         if (!this.wholeName.split(" ")[2])
@@ -236,19 +306,40 @@ class classroomLesson extends Lesson {
 const router = express.Router();
 router.get("/specifiedTimetable", async (req, res, next) => {
     const link = req.query.link?.toString();
+    const formatAsDays = (req.query.formatAsDays == "true");
     if (!link) {
         res.status(400).json({ message: "Please provide a valid link." });
         return;
     }
     const branchType = link.substring(link.lastIndexOf("/") + 1)[0];
+    if (!branchType || (branchType !== "n" && branchType !== "s" && branchType !== "o")) {
+        res.status(400).json({ message: "Please provide a valid link." });
+        return;
+    }
     try {
         const timetableWebsiteData = await getWebsiteData(link);
-        const lessons = getLessons(timetableWebsiteData);
-        const lessonsByDay = getLessonsByDay(lessons);
-        const lessonsAsObjects = getLessonsAsObject(lessonsByDay, branchType);
-        // If lesson is for classes
-        addDataToClassLessons(lessonsAsObjects);
-        res.send(lessonsAsObjects);
+        const lessonElements = getLessonElements(timetableWebsiteData);
+        const lessonsAsObjects = getLessonsAsObject(lessonElements, branchType);
+        if (!formatAsDays) {
+            const responseObject = [];
+            lessonsAsObjects.forEach((lesson, index) => {
+                lesson.setDayNumber(index);
+                responseObject.push(lesson.getData());
+            });
+            res.send(responseObject);
+        }
+        if (formatAsDays) {
+            const responseObject = [];
+            const schoolDays = 5;
+            for (let i = 0; i < schoolDays; i++) {
+                const currentDayLessons = [];
+                for (let j = i; j < lessonsAsObjects.length; j += 5) {
+                    currentDayLessons.push(lessonsAsObjects[j]?.setDayNumber(i).getData());
+                }
+                responseObject.push(currentDayLessons);
+            }
+            res.send(responseObject);
+        }
     }
     catch (err) {
         next(err);
@@ -261,24 +352,14 @@ router.get("/allBranches", async (req, res, next) => {
         res.status(400).json({ message: "Please provide a valid link." });
     }
     try {
-        const responseObject = { classesData: [] };
+        const responseObject = [];
         const schoolWebsiteData = await getWebsiteData(link);
-        const teachersElements = getSpecifiedElements(schoolWebsiteData, 1);
-        if (teachersElements) {
-            const teachersData = getTeachersData(teachersElements);
-            responseObject.teachersData = teachersData;
-        }
-        const classesElements = getSpecifiedElements(schoolWebsiteData, 0);
-        if (!classesElements) {
-            res.status(404).json({ message: "No classes found on the website." });
-            return;
-        }
-        const classesData = getClassesData(classesElements);
-        responseObject.classesData = classesData;
-        const classroomsElements = getSpecifiedElements(schoolWebsiteData, 2);
-        if (classroomsElements) {
-            const classroomData = getClassroomsData(classroomsElements);
-            responseObject.classroomsData = classroomData;
+        for (let i = 0; i <= 2; i++) {
+            const branchElements = getSpecifiedElements(schoolWebsiteData, i);
+            if (branchElements) {
+                const branchData = getBranchData(branchElements, i);
+                responseObject[i] = branchData;
+            }
         }
         res.json(responseObject);
     }
@@ -286,70 +367,52 @@ router.get("/allBranches", async (req, res, next) => {
         next(err);
     }
 });
-function addDataToClassLessons(lessons) {
-    lessons.forEach((day) => {
-        day.forEach((lesson) => {
-            lesson.generateSubject().generateTeacherData().generateClassroomData().generateClassData();
-        });
-    });
-}
-function getLessonsAsObject(lessonsByDay, branchType) {
-    const lessonsAsObjects = [];
-    lessonsByDay.forEach((day, dayNumber) => {
-        const daysArray = [];
-        day.forEach((lesson) => {
-            if (lesson) {
-                const links = lesson.querySelectorAll('a');
-                const attributes = [];
-                links.forEach(link => {
-                    if (link && link.attributes && link.attributes.href) {
-                        attributes.push(link.attributes.href);
-                    }
-                });
-                const lessonNumber = Number(lesson.parentNode.querySelector('.nr')?.innerText);
-                const hour = lesson.parentNode.querySelector('.g')?.innerText;
-                if (branchType == "o") {
-                    daysArray.push(new ClassLesson(dayNumber, lesson.innerText, lessonNumber, attributes, hour));
-                }
-                if (branchType == "n") {
-                    daysArray.push(new TeacherLesson(dayNumber, lesson.innerText, lessonNumber, attributes, hour));
-                }
-                if (branchType == "s") {
-                    daysArray.push(new classroomLesson(dayNumber, lesson.innerText, lessonNumber, attributes, hour));
-                }
-            }
-        });
-        lessonsAsObjects.push(daysArray);
-    });
-    return lessonsAsObjects;
-}
-function getLessons(timetableWebsiteData) {
-    const timetableWebsiteDOM = parse(timetableWebsiteData);
-    const lessons = [];
-    const lessonsElements = timetableWebsiteDOM.querySelectorAll("td.l");
-    lessonsElements.forEach(lessonElement => {
-        lessons.push(lessonElement);
-    });
-    return lessons;
-}
-function getLessonsByDay(lessons) {
-    const schoolDays = 5;
-    const lessonsByDayObject = [];
-    for (let i = 0; i < schoolDays; i++) {
-        const currentDayLessons = [];
-        for (let j = i; j < lessons.length; j += 5) {
-            currentDayLessons.push(lessons[j]);
-        }
-        lessonsByDayObject.push(currentDayLessons);
-    }
-    return lessonsByDayObject;
-}
 async function getWebsiteData(schoolLink = "https://zsem.edu.pl/plany/lista.html") {
     // Fetching data from specified school website
     const request = await fetch(schoolLink);
     // School website data in string format
     const schoolWebsiteData = await request.text();
     return schoolWebsiteData;
+}
+function getLessonsAsObject(lessonsByDay, branchType) {
+    const lessonsAsObjects = [];
+    lessonsByDay.forEach((lesson) => {
+        if (lesson) {
+            const links = lesson.querySelectorAll('a');
+            const attributes = [];
+            links.forEach((link) => {
+                if (link.attributes && link.attributes.href) {
+                    attributes.push(link.attributes.href);
+                }
+            });
+            const lessonNumber = Number(lesson.parentNode.querySelector('.nr')?.innerText);
+            const hour = lesson.parentNode.querySelector('.g')?.innerText;
+            let lessonObject;
+            if (branchType == "o") {
+                lessonObject = new ClassLesson(lesson, lesson.innerText, lessonNumber, attributes, hour);
+            }
+            if (branchType == "n") {
+                lessonObject = new TeacherLesson(lesson, lesson.innerText, lessonNumber, attributes, hour);
+            }
+            if (branchType == "s") {
+                lessonObject = new ClassroomLesson(lesson, lesson.innerText, lessonNumber, attributes, hour);
+            }
+            if (lessonObject !== undefined) {
+                lessonObject.generateTeacherData().generateSubject().generateClassroomData().generateClassData().divideToGroups();
+                lessonsAsObjects.push(lessonObject);
+            }
+        }
+    });
+    return lessonsAsObjects;
+}
+function getLessonElements(timetableWebsiteData) {
+    const timetableWebsiteDOM = parse(timetableWebsiteData);
+    const lessons = [];
+    const lessonsElements = timetableWebsiteDOM.querySelectorAll("td.l");
+    lessonsElements.forEach((lessonElement) => {
+        lessons.push(lessonElement);
+    });
+    return lessons;
 }
 function getSpecifiedElements(schoolWebsiteData, elementsType) {
     const schoolWebsiteDOM = parse(schoolWebsiteData);
@@ -364,44 +427,31 @@ function getSpecifiedElements(schoolWebsiteData, elementsType) {
         return null;
     return specifiedList;
 }
-function getClassesData(classesElements) {
+function getBranchData(classesElements, branchType) {
     const classesData = [];
     classesElements.forEach((classElement) => {
         if (classElement && classElement.attributes.href) {
             const wholeName = classElement.text.trim();
             const link = classElement.attributes.href;
-            const singleClassData = new ClassData(wholeName, link);
-            singleClassData.generateClassName().generateProfileName().generateYear();
-            classesData.push(singleClassData);
+            let singleClassData;
+            if (branchType == 0) {
+                singleClassData = new ClassData(wholeName, link);
+                singleClassData.generateClassName().generateProfileName().generateYear().generateShortName().generateLongName();
+                classesData.push(singleClassData);
+            }
+            else if (branchType == 1) {
+                singleClassData = new TeacherData(wholeName, link);
+                singleClassData.generateClassName().generateProfileName().generateYear().generateShortName().generateLongName();
+                classesData.push(singleClassData);
+            }
+            else if (branchType == 2) {
+                singleClassData = new ClassroomData(wholeName, link);
+                singleClassData.generateClassName().generateProfileName().generateYear().generateShortName().generateLongName();
+                classesData.push(singleClassData);
+            }
         }
     });
     return classesData;
-}
-function getClassroomsData(classroomsElements) {
-    const classroomsData = [];
-    classroomsElements.forEach((classroomElement) => {
-        if (classroomElement && classroomElement.attributes.href) {
-            const wholeName = classroomElement.text.trim();
-            const link = classroomElement.attributes.href;
-            const singleClassroomData = new ClassroomData(wholeName, link);
-            singleClassroomData.generateShortName().generateLongName();
-            classroomsData.push(singleClassroomData);
-        }
-    });
-    return classroomsData;
-}
-function getTeachersData(teachersElements) {
-    const teachersData = [];
-    teachersElements.forEach((teacherElement) => {
-        if (teacherElement && teacherElement.attributes.href) {
-            const wholeName = teacherElement.text.trim();
-            const link = teacherElement.attributes.href;
-            const singleTeacherData = new TeacherData(wholeName, link);
-            singleTeacherData.generateShortName().generateLongName();
-            teachersData.push(singleTeacherData);
-        }
-    });
-    return teachersData;
 }
 router.use((error, req, res, next) => {
     console.log(error);
