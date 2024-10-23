@@ -186,7 +186,7 @@ class Lesson {
     this.wholeName = wholeName.replace("\n", " \n ").trim();
     if (attributes && attributes.length > 0) this.attributes = attributes;
     if (wholeHour) {
-      this.wholeHour = wholeHour.trim();
+      this.wholeHour = wholeHour;
       const hourSplit = this.wholeHour.split("-");
       if (hourSplit.length === 2 && hourSplit[0] && hourSplit[1]) {
         this.startHour = hourSplit[0].trim();
