@@ -4,16 +4,16 @@ export interface LessonGetData {
     wholeName: string | null,
     lessonNumber: number | null,
     teacherData: {
-        shortName: string | undefined;
-        link?: string | undefined;
+        shortName: string | null;
+        link: string | null;
     }[],
-    classroomData: undefined | {
-        shortName: string | undefined,
-        link?: string | undefined,
+    classroomData: {
+        shortName: string | null,
+        link: string | null,
     }[],
-    classData: undefined | {
-        shortName: string | undefined,
-        link?: string | undefined,
+    classData: {
+        shortName: string | null,
+        link: string | null,
     }[],
     subject: string[],
     attributes: string[],
@@ -30,23 +30,23 @@ export default class Lesson {
     readonly schoolDays: number = 5;
 
     private lesson: ParsedHTMLElement;
-    protected header: string | undefined;
+    protected header: string | null = null;
     protected wholeName: string | null = null;
     private lessonNumber: number | null = null;
 
     protected teacherData: {
-        shortName: string | undefined;
-        link?: string | undefined;
+        shortName: string | null;
+        link: string | null;
     }[] = [];
 
     protected classroomData: {
-        shortName: string | undefined,
-        link?: string | undefined,
+        shortName: string | null,
+        link: string | null,
     }[] = [];
 
     protected classData: {
-        shortName: string | undefined,
-        link?: string | undefined,
+        shortName: string | null,
+        link: string | null,
     }[] = [];
 
     protected subject: string[] = [];
@@ -62,25 +62,32 @@ export default class Lesson {
     constructor(lesson: ParsedHTMLElement, wholeName: string, lessonNumber?: number, attributes?: string[], wholeHour?: string) {
         this.lesson = lesson;
 
-        if (lessonNumber && !isNaN(lessonNumber)) this.lessonNumber = lessonNumber - 1;
+        if (lessonNumber && !isNaN(lessonNumber)) {
+            this.lessonNumber = lessonNumber - 1
+        };
 
         if (wholeName !== "&nbsp;") {
             this.wholeName = wholeName.replace("\n", " \n ").trim();
         }
 
-        if (attributes && attributes.length > 0) this.attributes = attributes;
+        if (attributes) {
+            this.attributes = attributes;
+            this.setSpecifiedAttribute();
+
+        };
 
         if (wholeHour) {
             this.wholeHour = wholeHour;
-            const hourSplit = this.wholeHour.split("-");
-            if (hourSplit.length === 2 && hourSplit[0] && hourSplit[1]) {
+
+            const hourSplit: string[] = this.wholeHour.split("-");
+
+            if (hourSplit[0]) {
                 this.startHour = hourSplit[0].trim();
+            }
+
+            if (hourSplit[1]) {
                 this.endHour = hourSplit[1].trim();
             }
-        }
-
-        if (attributes) {
-            this.setSpecifiedAttribute();
         }
     }
 
@@ -111,6 +118,11 @@ export default class Lesson {
 
 
     public getData(): LessonGetData {
+        this.classAttributes = [];
+        this.classroomAttributes = [];
+        this.teacherAttributes = [];
+        this.setSpecifiedAttribute();
+
         return {
             wholeName: this.wholeName,
             lessonNumber: this.lessonNumber,
