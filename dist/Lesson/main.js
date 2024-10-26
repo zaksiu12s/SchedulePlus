@@ -3,10 +3,10 @@ export default class Lesson {
         this.schoolDays = 5;
         this.wholeName = "";
         this.lessonNumber = null;
-        this.teacherData = {};
-        this.classroomData = {};
-        this.classData = {};
-        this.subject = null;
+        this.teacherData = [];
+        this.classroomData = [];
+        this.classData = [];
+        this.subject = [];
         this.attributes = [];
         this.wholeHour = null;
         this.startHour = null;

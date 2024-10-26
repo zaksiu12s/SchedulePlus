@@ -9,19 +9,25 @@ export default class TeacherLesson extends Lesson {
     override setHeader(header: string | undefined, link: string | undefined): this {
         if (header) {
             this.header = header;
-            this.teacherData = {
+            this.teacherData.push({
                 shortName: this.header,
                 link
-            };
+            });
+        }
+
+        if (link) {
+            this.teacherAttributes.push(link);
+            this.attributes.push(link);
         }
 
         return this;
     }
 
     override generateSubject(): this {
-        if (!this.wholeName.split(" ")[1]) return this;
+        const subject = this.wholeName.split(" ")[1]
+        if (!subject) return this;
 
-        this.subject = this.wholeName.split(" ")[1];
+        this.subject.push(subject);
 
         return this;
     }
@@ -29,17 +35,17 @@ export default class TeacherLesson extends Lesson {
     override generateClassData(): this {
         if (!this.wholeName.split(" ")[0]) return this;
         if (!this.attributes || !this.attributes[0]) {
-            this.classData = {
+            this.classData.push({
                 shortName: this.wholeName.split(" ")[0],
-            }
+            })
 
             return this;
         };
 
-        this.classData = {
+        this.classData.push({
             shortName: this.wholeName.split(" ")[0],
             link: this.attributes[0],
-        }
+        })
 
         return this;
     }
@@ -47,17 +53,17 @@ export default class TeacherLesson extends Lesson {
     override generateClassroomData(): this {
         if (!this.wholeName.split(" ")[2]) return this;
         if (!this.attributes || !this.attributes[1]) {
-            this.classroomData = {
+            this.classroomData.push({
                 shortName: this.wholeName.split(" ")[2],
-            }
+            })
 
             return this;
         };
 
-        this.classroomData = {
+        this.classroomData.push({
             shortName: this.wholeName.split(" ")[2],
             link: this.attributes[1],
-        }
+        })
 
         return this;
     }

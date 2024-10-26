@@ -5,25 +5,16 @@ export interface LessonGetData {
     teacherData: {
         shortName: string | undefined;
         link?: string | undefined;
-    } | {
+    }[];
+    classroomData: undefined | {
         shortName: string | undefined;
         link?: string | undefined;
-    }[] | {};
-    classroomData: {
+    }[];
+    classData: undefined | {
         shortName: string | undefined;
         link?: string | undefined;
-    } | undefined | {
-        shortName: string | undefined;
-        link?: string | undefined;
-    }[] | {};
-    classData: {
-        shortName: string | undefined;
-        link?: string | undefined;
-    } | undefined | {
-        shortName: string | undefined;
-        link?: string | undefined;
-    }[] | {};
-    subject: string | null | string[];
+    }[];
+    subject: string[];
     attributes: string[];
     wholeHour: string | null;
     startHour: string | null;
@@ -42,25 +33,16 @@ export default class Lesson {
     protected teacherData: {
         shortName: string | undefined;
         link?: string | undefined;
-    } | {
-        shortName: string | undefined;
-        link?: string | undefined;
-    }[] | {};
+    }[];
     protected classroomData: {
         shortName: string | undefined;
         link?: string | undefined;
-    } | {
-        shortName: string | undefined;
-        link?: string | undefined;
-    }[] | {};
+    }[];
     protected classData: {
         shortName: string | undefined;
         link?: string | undefined;
-    } | {
-        shortName: string | undefined;
-        link?: string | undefined;
-    }[] | {};
-    protected subject: string | null | string[];
+    }[];
+    protected subject: string[];
     protected attributes: string[];
     private wholeHour;
     private startHour;
