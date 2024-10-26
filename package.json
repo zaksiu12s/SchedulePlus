@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "app": "nodemon dist/index.js",
-    "build": "tsc --watch",
-    "dev": "npm-run-all --parallel build app"
+    "app": "node dist/index.js",
+    "build": "tsc",
+    "dev": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
+    "tailwind": "npx tailwindcss -i input.css -o output.css --watch"
   },
   "keywords": [],
   "author": "github.com/zaksiu12s",
@@ -23,7 +24,8 @@
     "nodemon": "^3.1.7"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5",
+    "concurrently": "^9.0.1",
+    "tailwindcss": "^3.4.14",
     "typescript": "^5.6.2"
   }
 }
