@@ -1,12 +1,13 @@
 # <h1 align="center">SchedulePlus</h1>
 
 ```diff
++ ONLY SUPPORTS API v3
 - API v1 and API v2 is no longer supported in this version!
 ```
 
-# <p align="center">![](https://img.shields.io/github/license/zaksiu12s/SchedulePlus.svg) ![](https://img.shields.io/badge/Maintained%3F-yes-green.svg) ![](https://img.shields.io/github/commits-since/zaksiu12s/SchedulePlus/v0.2.svg) ![](https://img.shields.io/github/last-commit/zaksiu12s/SchedulePlus.svg) ![](https://img.shields.io/github/issues-pr/zaksiu12s/SchedulePlus.svg)</p>
+# <p align="center">![](https://img.shields.io/github/license/zaksiu12s/SchedulePlus.svg) ![](https://img.shields.io/badge/Maintained%3F-yes-green.svg) ![](https://img.shields.io/github/commits-since/zaksiu12s/SchedulePlus/v0.3.svg) ![](https://img.shields.io/github/last-commit/zaksiu12s/SchedulePlus.svg) ![](https://img.shields.io/github/issues-pr/zaksiu12s/SchedulePlus.svg)</p>
 
-App for displaying schedule in upgraded version
+App for displaying schedule in upgraded version.
 
 ## Technologies used
 
@@ -28,7 +29,7 @@ App for displaying schedule in upgraded version
 
 ## Npm commands
 
-- `npm run app` runs the main index file server with nodemon
+- `npm run app` runs the main index file server with node
 - `npm run build` builds the typescript
 - `npm run dev` runs both app and build commands at the same time (should be used when developing the backend)
 
@@ -40,8 +41,8 @@ App for displaying schedule in upgraded version
    <summary>EXAMPLE RESPONSE</summary>
 
 ```JSON
-{
-    "classesData": [
+    [
+    [
         {
             "wholeName": "5iT 5informatyk",
             "link": "o1.html",
@@ -267,7 +268,7 @@ App for displaying schedule in upgraded version
             "year": 1
         }
     ],
-    "teachersData": [
+    [
         {
             "wholeName": "H.Małysa-Legutko (HM)",
             "link": "n1.html",
@@ -821,7 +822,7 @@ App for displaying schedule in upgraded version
             "longName": "v.rewalidacja"
         }
     ],
-    "classroomsData": [
+    [
         {
             "wholeName": "5 Prac. UTK 2 Hades",
             "link": "s1.html",
@@ -1047,8 +1048,7 @@ App for displaying schedule in upgraded version
             "longName": "Salka Katechetyczna w kościele NSPJ"
         }
     ]
-}
-
+]
 ```
 
 </details>
@@ -1062,1123 +1062,2536 @@ App for displaying schedule in upgraded version
 [
     [
         {
-            "dayNumber": 0,
+            "wholeName": null,
             "lessonNumber": 0,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:00- 7:45",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:00- 7:45",
             "startHour": "7:00",
             "endHour": "7:45",
-            "subject": "&nbsp;"
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 0,
+            "wholeName": null,
             "lessonNumber": 1,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:50- 8:35",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:50- 8:35",
             "startHour": "7:50",
             "endHour": "8:35",
-            "subject": "&nbsp;"
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 0,
+            "wholeName": null,
             "lessonNumber": 2,
-            "wholeName": "&nbsp;",
-            "wholeHour": "8:40- 9:25",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 8:40- 9:25",
             "startHour": "8:40",
             "endHour": "9:25",
-            "subject": "&nbsp;"
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 0,
+            "wholeName": null,
             "lessonNumber": 3,
-            "wholeName": "&nbsp;",
-            "wholeHour": "9:30-10:15",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 9:30-10:15",
             "startHour": "9:30",
             "endHour": "10:15",
-            "subject": "&nbsp;"
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 0,
+            "wholeName": null,
             "lessonNumber": 4,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "10:30-11:15",
             "startHour": "10:30",
             "endHour": "11:15",
-            "subject": "&nbsp;"
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 0,
+            "wholeName": null,
             "lessonNumber": 5,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "11:20-12:05",
             "startHour": "11:20",
             "endHour": "12:05",
-            "subject": "&nbsp;"
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 0,
-            "lessonNumber": 6,
             "wholeName": "geografia Cg 4",
+            "lessonNumber": 6,
+            "teacherData": [
+                {
+                    "shortName": "Cg",
+                    "link": "n15.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "4",
+                    "link": "s2.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "geografia"
+            ],
             "attributes": [
                 "n15.html",
-                "s2.html"
+                "s2.html",
+                "o13.html"
             ],
             "wholeHour": "12:10-12:55",
             "startHour": "12:10",
             "endHour": "12:55",
-            "subject": "geografia",
-            "teacherData": {
-                "shortName": "Cg",
-                "link": "n15.html"
-            },
-            "classroomData": {
-                "shortName": "4",
-                "link": "s2.html"
-            }
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n15.html"
+            ],
+            "classroomAttributes": [
+                "s2.html"
+            ]
         },
         {
-            "dayNumber": 0,
+            "wholeName": "j.niemiecki-1/2 Tm sj1 \n j.niemiecki-2/2 Mw 106",
             "lessonNumber": 7,
-            "wholeName": "j.niemiecki-1/2 Tm sj1j.niemiecki-2/2 Mw 106",
+            "teacherData": [
+                {
+                    "shortName": "Tm",
+                    "link": "n62.html"
+                },
+                {
+                    "shortName": "Mw",
+                    "link": "n68.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "sj1",
+                    "link": "s28.html"
+                },
+                {
+                    "shortName": "106",
+                    "link": "s39.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.niemiecki-1/2",
+                "j.niemiecki-2/2"
+            ],
             "attributes": [
                 "n62.html",
                 "s28.html",
                 "n68.html",
-                "s39.html"
+                "s39.html",
+                "o13.html"
             ],
             "wholeHour": "13:15-14:00",
             "startHour": "13:15",
             "endHour": "14:00",
-            "subject": "j.niemiecki-1/2",
-            "teacherData": {
-                "shortName": "Tm",
-                "link": "n62.html"
-            },
-            "classroomData": {
-                "shortName": "sj1j.niemiecki-2/2",
-                "link": "s28.html"
-            }
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n62.html",
+                "n68.html"
+            ],
+            "classroomAttributes": [
+                "s28.html",
+                "s39.html"
+            ]
         },
         {
-            "dayNumber": 0,
+            "wholeName": "j.niemiecki-1/2 Tm sj1 \n j.niemiecki-2/2 Mw sj4",
             "lessonNumber": 8,
-            "wholeName": "j.niemiecki-1/2 Tm sj1j.niemiecki-2/2 Mw sj4",
+            "teacherData": [
+                {
+                    "shortName": "Tm",
+                    "link": "n62.html"
+                },
+                {
+                    "shortName": "Mw",
+                    "link": "n68.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "sj1",
+                    "link": "s28.html"
+                },
+                {
+                    "shortName": "sj4",
+                    "link": "s31.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.niemiecki-1/2",
+                "j.niemiecki-2/2"
+            ],
             "attributes": [
                 "n62.html",
                 "s28.html",
                 "n68.html",
-                "s31.html"
+                "s31.html",
+                "o13.html"
             ],
             "wholeHour": "14:05-14:50",
             "startHour": "14:05",
             "endHour": "14:50",
-            "subject": "j.niemiecki-1/2",
-            "teacherData": {
-                "shortName": "Tm",
-                "link": "n62.html"
-            },
-            "classroomData": {
-                "shortName": "sj1j.niemiecki-2/2",
-                "link": "s28.html"
-            }
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n62.html",
+                "n68.html"
+            ],
+            "classroomAttributes": [
+                "s28.html",
+                "s31.html"
+            ]
         },
         {
-            "dayNumber": 0,
-            "lessonNumber": 9,
             "wholeName": "p.przedsięb. Kg 14",
+            "lessonNumber": 9,
+            "teacherData": [
+                {
+                    "shortName": "Kg",
+                    "link": "n31.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "14",
+                    "link": "s9.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "p.przedsięb."
+            ],
             "attributes": [
                 "n31.html",
-                "s9.html"
+                "s9.html",
+                "o13.html"
             ],
             "wholeHour": "14:55-15:40",
             "startHour": "14:55",
             "endHour": "15:40",
-            "subject": "p.przedsięb.",
-            "teacherData": {
-                "shortName": "Kg",
-                "link": "n31.html"
-            },
-            "classroomData": {
-                "shortName": "14",
-                "link": "s9.html"
-            }
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n31.html"
+            ],
+            "classroomAttributes": [
+                "s9.html"
+            ]
         },
         {
-            "dayNumber": 0,
+            "wholeName": "informatyka-1/2 Dd 6 \n informatyka-2/2 RC 15",
             "lessonNumber": 10,
-            "wholeName": "informatyka-1/2 Dd 6informatyka-2/2 RC 15",
+            "teacherData": [
+                {
+                    "shortName": "Dd",
+                    "link": "n19.html"
+                },
+                {
+                    "shortName": "RC",
+                    "link": "n91.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "6",
+                    "link": "s4.html"
+                },
+                {
+                    "shortName": "15",
+                    "link": "s10.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "informatyka-1/2",
+                "informatyka-2/2"
+            ],
             "attributes": [
                 "n19.html",
                 "s4.html",
                 "n91.html",
-                "s10.html"
+                "s10.html",
+                "o13.html"
             ],
             "wholeHour": "15:45-16:30",
             "startHour": "15:45",
             "endHour": "16:30",
-            "subject": "informatyka-1/2",
-            "teacherData": {
-                "shortName": "Dd",
-                "link": "n19.html"
-            },
-            "classroomData": {
-                "shortName": "6informatyka-2/2",
-                "link": "s4.html"
-            }
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n19.html",
+                "n91.html"
+            ],
+            "classroomAttributes": [
+                "s4.html",
+                "s10.html"
+            ]
         },
         {
-            "dayNumber": 0,
-            "lessonNumber": 11,
             "wholeName": "biologia Ne 12",
+            "lessonNumber": 11,
+            "teacherData": [
+                {
+                    "shortName": "Ne",
+                    "link": "n46.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "12",
+                    "link": "s7.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "biologia"
+            ],
             "attributes": [
                 "n46.html",
-                "s7.html"
+                "s7.html",
+                "o13.html"
             ],
             "wholeHour": "16:35-17:20",
             "startHour": "16:35",
             "endHour": "17:20",
-            "subject": "biologia",
-            "teacherData": {
-                "shortName": "Ne",
-                "link": "n46.html"
-            },
-            "classroomData": {
-                "shortName": "12",
-                "link": "s7.html"
-            }
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n46.html"
+            ],
+            "classroomAttributes": [
+                "s7.html"
+            ]
         },
         {
-            "dayNumber": 0,
-            "lessonNumber": 12,
             "wholeName": "prog.apk.web tl 40",
+            "lessonNumber": 12,
+            "teacherData": [
+                {
+                    "shortName": "tl",
+                    "link": "n35.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "40",
+                    "link": "s16.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prog.apk.web"
+            ],
             "attributes": [
                 "n35.html",
-                "s16.html"
+                "s16.html",
+                "o13.html"
             ],
             "wholeHour": "17:25-18:10",
             "startHour": "17:25",
             "endHour": "18:10",
-            "subject": "prog.apk.web",
-            "teacherData": {
-                "shortName": "tl",
-                "link": "n35.html"
-            },
-            "classroomData": {
-                "shortName": "40",
-                "link": "s16.html"
-            }
+            "dayNumber": 0,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n35.html"
+            ],
+            "classroomAttributes": [
+                "s16.html"
+            ]
         }
     ],
     [
         {
-            "dayNumber": 1,
+            "wholeName": null,
             "lessonNumber": 0,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:00- 7:45",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:00- 7:45",
             "startHour": "7:00",
             "endHour": "7:45",
-            "subject": "&nbsp;"
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 1,
+            "wholeName": null,
             "lessonNumber": 1,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:50- 8:35",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:50- 8:35",
             "startHour": "7:50",
             "endHour": "8:35",
-            "subject": "&nbsp;"
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 1,
+            "wholeName": null,
             "lessonNumber": 2,
-            "wholeName": "&nbsp;",
-            "wholeHour": "8:40- 9:25",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 8:40- 9:25",
             "startHour": "8:40",
             "endHour": "9:25",
-            "subject": "&nbsp;"
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 1,
+            "wholeName": null,
             "lessonNumber": 3,
-            "wholeName": "&nbsp;",
-            "wholeHour": "9:30-10:15",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 9:30-10:15",
             "startHour": "9:30",
             "endHour": "10:15",
-            "subject": "&nbsp;"
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 1,
+            "wholeName": null,
             "lessonNumber": 4,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "10:30-11:15",
             "startHour": "10:30",
             "endHour": "11:15",
-            "subject": "&nbsp;"
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 1,
-            "lessonNumber": 5,
             "wholeName": "prac.apk.web-2/2 tl 107",
+            "lessonNumber": 5,
+            "teacherData": [
+                {
+                    "shortName": "tl",
+                    "link": "n35.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.web-2/2"
+            ],
             "attributes": [
                 "n35.html",
-                "s13.html"
+                "s13.html",
+                "o13.html"
             ],
             "wholeHour": "11:20-12:05",
             "startHour": "11:20",
             "endHour": "12:05",
-            "subject": "prac.apk.web-2/2",
-            "teacherData": {
-                "shortName": "tl",
-                "link": "n35.html"
-            },
-            "classroomData": {
-                "shortName": "107",
-                "link": "s13.html"
-            }
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n35.html"
+            ],
+            "classroomAttributes": [
+                "s13.html"
+            ]
         },
         {
-            "dayNumber": 1,
-            "lessonNumber": 6,
             "wholeName": "prac.apk.web-2/2 tl 107",
+            "lessonNumber": 6,
+            "teacherData": [
+                {
+                    "shortName": "tl",
+                    "link": "n35.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.web-2/2"
+            ],
             "attributes": [
                 "n35.html",
-                "s13.html"
+                "s13.html",
+                "o13.html"
             ],
             "wholeHour": "12:10-12:55",
             "startHour": "12:10",
             "endHour": "12:55",
-            "subject": "prac.apk.web-2/2",
-            "teacherData": {
-                "shortName": "tl",
-                "link": "n35.html"
-            },
-            "classroomData": {
-                "shortName": "107",
-                "link": "s13.html"
-            }
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n35.html"
+            ],
+            "classroomAttributes": [
+                "s13.html"
+            ]
         },
         {
-            "dayNumber": 1,
+            "wholeName": "r_j.ang-1/2 Mb 38 \n r_j.ang-2/2 Br sj6",
             "lessonNumber": 7,
-            "wholeName": "r_j.ang-1/2 Mb 38r_j.ang-2/2 Br sj6",
+            "teacherData": [
+                {
+                    "shortName": "Mb",
+                    "link": "n37.html"
+                },
+                {
+                    "shortName": "Br",
+                    "link": "n12.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "38",
+                    "link": "s11.html"
+                },
+                {
+                    "shortName": "sj6",
+                    "link": "s33.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "r_j.ang-1/2",
+                "r_j.ang-2/2"
+            ],
             "attributes": [
                 "n37.html",
                 "s11.html",
                 "n12.html",
-                "s33.html"
+                "s33.html",
+                "o13.html"
             ],
             "wholeHour": "13:15-14:00",
             "startHour": "13:15",
             "endHour": "14:00",
-            "subject": "r_j.ang-1/2",
-            "teacherData": {
-                "shortName": "Mb",
-                "link": "n37.html"
-            },
-            "classroomData": {
-                "shortName": "38r_j.ang-2/2",
-                "link": "s11.html"
-            }
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n37.html",
+                "n12.html"
+            ],
+            "classroomAttributes": [
+                "s11.html",
+                "s33.html"
+            ]
         },
         {
-            "dayNumber": 1,
-            "lessonNumber": 8,
             "wholeName": "religia Tj 43",
+            "lessonNumber": 8,
+            "teacherData": [
+                {
+                    "shortName": "Tj",
+                    "link": "n59.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "43",
+                    "link": "s19.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "religia"
+            ],
             "attributes": [
                 "n59.html",
-                "s19.html"
+                "s19.html",
+                "o13.html"
             ],
             "wholeHour": "14:05-14:50",
             "startHour": "14:05",
             "endHour": "14:50",
-            "subject": "religia",
-            "teacherData": {
-                "shortName": "Tj",
-                "link": "n59.html"
-            },
-            "classroomData": {
-                "shortName": "43",
-                "link": "s19.html"
-            }
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n59.html"
+            ],
+            "classroomAttributes": [
+                "s19.html"
+            ]
         },
         {
-            "dayNumber": 1,
+            "wholeName": "wf-1/2 Bu sg2 \n wf-2/2 Gm sg4",
             "lessonNumber": 9,
-            "wholeName": "wf-1/2 Bu sg2wf-2/2 Gm sg4",
+            "teacherData": [
+                {
+                    "shortName": "Bu",
+                    "link": "n14.html"
+                },
+                {
+                    "shortName": "Gm",
+                    "link": "n24.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "sg2",
+                    "link": "s36.html"
+                },
+                {
+                    "shortName": "sg4",
+                    "link": "s38.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "wf-1/2",
+                "wf-2/2"
+            ],
             "attributes": [
                 "n14.html",
                 "s36.html",
                 "n24.html",
-                "s38.html"
+                "s38.html",
+                "o13.html"
             ],
             "wholeHour": "14:55-15:40",
             "startHour": "14:55",
             "endHour": "15:40",
-            "subject": "wf-1/2",
-            "teacherData": {
-                "shortName": "Bu",
-                "link": "n14.html"
-            },
-            "classroomData": {
-                "shortName": "sg2wf-2/2",
-                "link": "s36.html"
-            }
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n14.html",
+                "n24.html"
+            ],
+            "classroomAttributes": [
+                "s36.html",
+                "s38.html"
+            ]
         },
         {
-            "dayNumber": 1,
+            "wholeName": "wf-1/2 Bu sg2 \n wf-2/2 Gm sg4",
             "lessonNumber": 10,
-            "wholeName": "wf-1/2 Bu sg2wf-2/2 Gm sg4",
+            "teacherData": [
+                {
+                    "shortName": "Bu",
+                    "link": "n14.html"
+                },
+                {
+                    "shortName": "Gm",
+                    "link": "n24.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "sg2",
+                    "link": "s36.html"
+                },
+                {
+                    "shortName": "sg4",
+                    "link": "s38.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "wf-1/2",
+                "wf-2/2"
+            ],
             "attributes": [
                 "n14.html",
                 "s36.html",
                 "n24.html",
-                "s38.html"
+                "s38.html",
+                "o13.html"
             ],
             "wholeHour": "15:45-16:30",
             "startHour": "15:45",
             "endHour": "16:30",
-            "subject": "wf-1/2",
-            "teacherData": {
-                "shortName": "Bu",
-                "link": "n14.html"
-            },
-            "classroomData": {
-                "shortName": "sg2wf-2/2",
-                "link": "s36.html"
-            }
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n14.html",
+                "n24.html"
+            ],
+            "classroomAttributes": [
+                "s36.html",
+                "s38.html"
+            ]
         },
         {
-            "dayNumber": 1,
-            "lessonNumber": 11,
             "wholeName": "prog.str.obi Kv 7",
+            "lessonNumber": 11,
+            "teacherData": [
+                {
+                    "shortName": "Kv",
+                    "link": "n86.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "7",
+                    "link": "s5.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prog.str.obi"
+            ],
             "attributes": [
                 "n86.html",
-                "s5.html"
+                "s5.html",
+                "o13.html"
             ],
             "wholeHour": "16:35-17:20",
             "startHour": "16:35",
             "endHour": "17:20",
-            "subject": "prog.str.obi",
-            "teacherData": {
-                "shortName": "Kv",
-                "link": "n86.html"
-            },
-            "classroomData": {
-                "shortName": "7",
-                "link": "s5.html"
-            }
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n86.html"
+            ],
+            "classroomAttributes": [
+                "s5.html"
+            ]
         },
         {
-            "dayNumber": 1,
+            "wholeName": null,
             "lessonNumber": 12,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "17:25-18:10",
             "startHour": "17:25",
             "endHour": "18:10",
-            "subject": "&nbsp;"
+            "dayNumber": 1,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         }
     ],
     [
         {
-            "dayNumber": 2,
-            "lessonNumber": 0,
             "wholeName": "religia Tj 11",
+            "lessonNumber": 0,
+            "teacherData": [
+                {
+                    "shortName": "Tj",
+                    "link": "n59.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "11",
+                    "link": "s6.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "religia"
+            ],
             "attributes": [
                 "n59.html",
-                "s6.html"
+                "s6.html",
+                "o13.html"
             ],
-            "wholeHour": "7:00- 7:45",
+            "wholeHour": " 7:00- 7:45",
             "startHour": "7:00",
             "endHour": "7:45",
-            "subject": "religia",
-            "teacherData": {
-                "shortName": "Tj",
-                "link": "n59.html"
-            },
-            "classroomData": {
-                "shortName": "11",
-                "link": "s6.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n59.html"
+            ],
+            "classroomAttributes": [
+                "s6.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 1,
             "wholeName": "his_ter GÓ 45",
+            "lessonNumber": 1,
+            "teacherData": [
+                {
+                    "shortName": "GÓ",
+                    "link": "n22.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "45",
+                    "link": "s21.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "his_ter"
+            ],
             "attributes": [
                 "n22.html",
-                "s21.html"
+                "s21.html",
+                "o13.html"
             ],
-            "wholeHour": "7:50- 8:35",
+            "wholeHour": " 7:50- 8:35",
             "startHour": "7:50",
             "endHour": "8:35",
-            "subject": "his_ter",
-            "teacherData": {
-                "shortName": "GÓ",
-                "link": "n22.html"
-            },
-            "classroomData": {
-                "shortName": "45",
-                "link": "s21.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n22.html"
+            ],
+            "classroomAttributes": [
+                "s21.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 2,
             "wholeName": "chemia AŚ 52",
+            "lessonNumber": 2,
+            "teacherData": [
+                {
+                    "shortName": "AŚ",
+                    "link": "n78.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "52",
+                    "link": "s26.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "chemia"
+            ],
             "attributes": [
                 "n78.html",
-                "s26.html"
+                "s26.html",
+                "o13.html"
             ],
-            "wholeHour": "8:40- 9:25",
+            "wholeHour": " 8:40- 9:25",
             "startHour": "8:40",
             "endHour": "9:25",
-            "subject": "chemia",
-            "teacherData": {
-                "shortName": "AŚ",
-                "link": "n78.html"
-            },
-            "classroomData": {
-                "shortName": "52",
-                "link": "s26.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n78.html"
+            ],
+            "classroomAttributes": [
+                "s26.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 3,
             "wholeName": "j.polski Si 46",
+            "lessonNumber": 3,
+            "teacherData": [
+                {
+                    "shortName": "Si",
+                    "link": "n54.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "46",
+                    "link": "s22.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.polski"
+            ],
             "attributes": [
                 "n54.html",
-                "s22.html"
+                "s22.html",
+                "o13.html"
             ],
-            "wholeHour": "9:30-10:15",
+            "wholeHour": " 9:30-10:15",
             "startHour": "9:30",
             "endHour": "10:15",
-            "subject": "j.polski",
-            "teacherData": {
-                "shortName": "Si",
-                "link": "n54.html"
-            },
-            "classroomData": {
-                "shortName": "46",
-                "link": "s22.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n54.html"
+            ],
+            "classroomAttributes": [
+                "s22.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 4,
             "wholeName": "r_matematyka EP 11",
+            "lessonNumber": 4,
+            "teacherData": [
+                {
+                    "shortName": "EP",
+                    "link": "n49.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "11",
+                    "link": "s6.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "r_matematyka"
+            ],
             "attributes": [
                 "n49.html",
-                "s6.html"
+                "s6.html",
+                "o13.html"
             ],
             "wholeHour": "10:30-11:15",
             "startHour": "10:30",
             "endHour": "11:15",
-            "subject": "r_matematyka",
-            "teacherData": {
-                "shortName": "EP",
-                "link": "n49.html"
-            },
-            "classroomData": {
-                "shortName": "11",
-                "link": "s6.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n49.html"
+            ],
+            "classroomAttributes": [
+                "s6.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 5,
             "wholeName": "matematyka EP 11",
+            "lessonNumber": 5,
+            "teacherData": [
+                {
+                    "shortName": "EP",
+                    "link": "n49.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "11",
+                    "link": "s6.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "matematyka"
+            ],
             "attributes": [
                 "n49.html",
-                "s6.html"
+                "s6.html",
+                "o13.html"
             ],
             "wholeHour": "11:20-12:05",
             "startHour": "11:20",
             "endHour": "12:05",
-            "subject": "matematyka",
-            "teacherData": {
-                "shortName": "EP",
-                "link": "n49.html"
-            },
-            "classroomData": {
-                "shortName": "11",
-                "link": "s6.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n49.html"
+            ],
+            "classroomAttributes": [
+                "s6.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 6,
             "wholeName": "fizyka JW 51",
+            "lessonNumber": 6,
+            "teacherData": [
+                {
+                    "shortName": "JW",
+                    "link": "n63.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "51",
+                    "link": "s25.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "fizyka"
+            ],
             "attributes": [
                 "n63.html",
-                "s25.html"
+                "s25.html",
+                "o13.html"
             ],
             "wholeHour": "12:10-12:55",
             "startHour": "12:10",
             "endHour": "12:55",
-            "subject": "fizyka",
-            "teacherData": {
-                "shortName": "JW",
-                "link": "n63.html"
-            },
-            "classroomData": {
-                "shortName": "51",
-                "link": "s25.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n63.html"
+            ],
+            "classroomAttributes": [
+                "s25.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 7,
             "wholeName": "str.apk.int DP 7",
+            "lessonNumber": 7,
+            "teacherData": [
+                {
+                    "shortName": "DP",
+                    "link": "n50.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "7",
+                    "link": "s5.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "str.apk.int"
+            ],
             "attributes": [
                 "n50.html",
-                "s5.html"
+                "s5.html",
+                "o13.html"
             ],
             "wholeHour": "13:15-14:00",
             "startHour": "13:15",
             "endHour": "14:00",
-            "subject": "str.apk.int",
-            "teacherData": {
-                "shortName": "DP",
-                "link": "n50.html"
-            },
-            "classroomData": {
-                "shortName": "7",
-                "link": "s5.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n50.html"
+            ],
+            "classroomAttributes": [
+                "s5.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 8,
             "wholeName": "prac.apk.mob-2/2 KM 107",
+            "lessonNumber": 8,
+            "teacherData": [
+                {
+                    "shortName": "KM",
+                    "link": "n42.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.mob-2/2"
+            ],
             "attributes": [
                 "n42.html",
-                "s13.html"
+                "s13.html",
+                "o13.html"
             ],
             "wholeHour": "14:05-14:50",
             "startHour": "14:05",
             "endHour": "14:50",
-            "subject": "prac.apk.mob-2/2",
-            "teacherData": {
-                "shortName": "KM",
-                "link": "n42.html"
-            },
-            "classroomData": {
-                "shortName": "107",
-                "link": "s13.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n42.html"
+            ],
+            "classroomAttributes": [
+                "s13.html"
+            ]
         },
         {
-            "dayNumber": 2,
-            "lessonNumber": 9,
             "wholeName": "prac.apk.mob-2/2 KM 107",
+            "lessonNumber": 9,
+            "teacherData": [
+                {
+                    "shortName": "KM",
+                    "link": "n42.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.mob-2/2"
+            ],
             "attributes": [
                 "n42.html",
-                "s13.html"
+                "s13.html",
+                "o13.html"
             ],
             "wholeHour": "14:55-15:40",
             "startHour": "14:55",
             "endHour": "15:40",
-            "subject": "prac.apk.mob-2/2",
-            "teacherData": {
-                "shortName": "KM",
-                "link": "n42.html"
-            },
-            "classroomData": {
-                "shortName": "107",
-                "link": "s13.html"
-            }
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n42.html"
+            ],
+            "classroomAttributes": [
+                "s13.html"
+            ]
         },
         {
-            "dayNumber": 2,
+            "wholeName": null,
             "lessonNumber": 10,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "15:45-16:30",
             "startHour": "15:45",
             "endHour": "16:30",
-            "subject": "&nbsp;"
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 2,
+            "wholeName": null,
             "lessonNumber": 11,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "16:35-17:20",
             "startHour": "16:35",
             "endHour": "17:20",
-            "subject": "&nbsp;"
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 2,
+            "wholeName": null,
             "lessonNumber": 12,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "17:25-18:10",
             "startHour": "17:25",
             "endHour": "18:10",
-            "subject": "&nbsp;"
+            "dayNumber": 2,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         }
     ],
     [
         {
-            "dayNumber": 3,
+            "wholeName": null,
             "lessonNumber": 0,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:00- 7:45",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:00- 7:45",
             "startHour": "7:00",
             "endHour": "7:45",
-            "subject": "&nbsp;"
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 3,
+            "wholeName": null,
             "lessonNumber": 1,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:50- 8:35",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:50- 8:35",
             "startHour": "7:50",
             "endHour": "8:35",
-            "subject": "&nbsp;"
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 3,
+            "wholeName": null,
             "lessonNumber": 2,
-            "wholeName": "&nbsp;",
-            "wholeHour": "8:40- 9:25",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 8:40- 9:25",
             "startHour": "8:40",
             "endHour": "9:25",
-            "subject": "&nbsp;"
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 3,
+            "wholeName": "wf-1/2 Bu sg4 \n wf-2/2 Gm sg3",
             "lessonNumber": 3,
-            "wholeName": "wf-1/2 Bu sg4wf-2/2 Gm sg3",
+            "teacherData": [
+                {
+                    "shortName": "Bu",
+                    "link": "n14.html"
+                },
+                {
+                    "shortName": "Gm",
+                    "link": "n24.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "sg4",
+                    "link": "s38.html"
+                },
+                {
+                    "shortName": "sg3",
+                    "link": "s37.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "wf-1/2",
+                "wf-2/2"
+            ],
             "attributes": [
                 "n14.html",
                 "s38.html",
                 "n24.html",
-                "s37.html"
+                "s37.html",
+                "o13.html"
             ],
-            "wholeHour": "9:30-10:15",
+            "wholeHour": " 9:30-10:15",
             "startHour": "9:30",
             "endHour": "10:15",
-            "subject": "wf-1/2",
-            "teacherData": {
-                "shortName": "Bu",
-                "link": "n14.html"
-            },
-            "classroomData": {
-                "shortName": "sg4wf-2/2",
-                "link": "s38.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n14.html",
+                "n24.html"
+            ],
+            "classroomAttributes": [
+                "s38.html",
+                "s37.html"
+            ]
         },
         {
-            "dayNumber": 3,
-            "lessonNumber": 4,
             "wholeName": "j.ang.zaw Br 48",
+            "lessonNumber": 4,
+            "teacherData": [
+                {
+                    "shortName": "Br",
+                    "link": "n12.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "48",
+                    "link": "s24.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.ang.zaw"
+            ],
             "attributes": [
                 "n12.html",
-                "s24.html"
+                "s24.html",
+                "o13.html"
             ],
             "wholeHour": "10:30-11:15",
             "startHour": "10:30",
             "endHour": "11:15",
-            "subject": "j.ang.zaw",
-            "teacherData": {
-                "shortName": "Br",
-                "link": "n12.html"
-            },
-            "classroomData": {
-                "shortName": "48",
-                "link": "s24.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n12.html"
+            ],
+            "classroomAttributes": [
+                "s24.html"
+            ]
         },
         {
-            "dayNumber": 3,
+            "wholeName": "prac.apk.web-1/2 tl 107 \n pra.str.apk.-2/2 WJ 38",
             "lessonNumber": 5,
-            "wholeName": "prac.apk.web-1/2 tl 107pra.str.apk.-2/2 WJ 38",
+            "teacherData": [
+                {
+                    "shortName": "tl",
+                    "link": "n35.html"
+                },
+                {
+                    "shortName": "WJ",
+                    "link": "n88.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                },
+                {
+                    "shortName": "38",
+                    "link": "s11.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.web-1/2",
+                "pra.str.apk.-2/2"
+            ],
             "attributes": [
                 "n35.html",
                 "s13.html",
                 "n88.html",
-                "s11.html"
+                "s11.html",
+                "o13.html"
             ],
             "wholeHour": "11:20-12:05",
             "startHour": "11:20",
             "endHour": "12:05",
-            "subject": "prac.apk.web-1/2",
-            "teacherData": {
-                "shortName": "tl",
-                "link": "n35.html"
-            },
-            "classroomData": {
-                "shortName": "107pra.str.apk.-2/2",
-                "link": "s13.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n35.html",
+                "n88.html"
+            ],
+            "classroomAttributes": [
+                "s13.html",
+                "s11.html"
+            ]
         },
         {
-            "dayNumber": 3,
+            "wholeName": "prac.apk.web-1/2 tl 107 \n pra.str.apk.-2/2 WJ 38",
             "lessonNumber": 6,
-            "wholeName": "prac.apk.web-1/2 tl 107pra.str.apk.-2/2 WJ 38",
+            "teacherData": [
+                {
+                    "shortName": "tl",
+                    "link": "n35.html"
+                },
+                {
+                    "shortName": "WJ",
+                    "link": "n88.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                },
+                {
+                    "shortName": "38",
+                    "link": "s11.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.web-1/2",
+                "pra.str.apk.-2/2"
+            ],
             "attributes": [
                 "n35.html",
                 "s13.html",
                 "n88.html",
-                "s11.html"
+                "s11.html",
+                "o13.html"
             ],
             "wholeHour": "12:10-12:55",
             "startHour": "12:10",
             "endHour": "12:55",
-            "subject": "prac.apk.web-1/2",
-            "teacherData": {
-                "shortName": "tl",
-                "link": "n35.html"
-            },
-            "classroomData": {
-                "shortName": "107pra.str.apk.-2/2",
-                "link": "s13.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n35.html",
+                "n88.html"
+            ],
+            "classroomAttributes": [
+                "s13.html",
+                "s11.html"
+            ]
         },
         {
-            "dayNumber": 3,
+            "wholeName": "j.ang-1/2 Mb sj4 \n j.ang-2/2 Br sj6",
             "lessonNumber": 7,
-            "wholeName": "j.ang-1/2 Mb sj4j.ang-2/2 Br sj6",
+            "teacherData": [
+                {
+                    "shortName": "Mb",
+                    "link": "n37.html"
+                },
+                {
+                    "shortName": "Br",
+                    "link": "n12.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "sj4",
+                    "link": "s31.html"
+                },
+                {
+                    "shortName": "sj6",
+                    "link": "s33.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.ang-1/2",
+                "j.ang-2/2"
+            ],
             "attributes": [
                 "n37.html",
                 "s31.html",
                 "n12.html",
-                "s33.html"
+                "s33.html",
+                "o13.html"
             ],
             "wholeHour": "13:15-14:00",
             "startHour": "13:15",
             "endHour": "14:00",
-            "subject": "j.ang-1/2",
-            "teacherData": {
-                "shortName": "Mb",
-                "link": "n37.html"
-            },
-            "classroomData": {
-                "shortName": "sj4j.ang-2/2",
-                "link": "s31.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n37.html",
+                "n12.html"
+            ],
+            "classroomAttributes": [
+                "s31.html",
+                "s33.html"
+            ]
         },
         {
-            "dayNumber": 3,
+            "wholeName": "j.ang-1/2 Mb sj4 \n j.ang-2/2 Br sj6",
             "lessonNumber": 8,
-            "wholeName": "j.ang-1/2 Mb sj4j.ang-2/2 Br sj6",
+            "teacherData": [
+                {
+                    "shortName": "Mb",
+                    "link": "n37.html"
+                },
+                {
+                    "shortName": "Br",
+                    "link": "n12.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "sj4",
+                    "link": "s31.html"
+                },
+                {
+                    "shortName": "sj6",
+                    "link": "s33.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.ang-1/2",
+                "j.ang-2/2"
+            ],
             "attributes": [
                 "n37.html",
                 "s31.html",
                 "n12.html",
-                "s33.html"
+                "s33.html",
+                "o13.html"
             ],
             "wholeHour": "14:05-14:50",
             "startHour": "14:05",
             "endHour": "14:50",
-            "subject": "j.ang-1/2",
-            "teacherData": {
-                "shortName": "Mb",
-                "link": "n37.html"
-            },
-            "classroomData": {
-                "shortName": "sj4j.ang-2/2",
-                "link": "s31.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n37.html",
+                "n12.html"
+            ],
+            "classroomAttributes": [
+                "s31.html",
+                "s33.html"
+            ]
         },
         {
-            "dayNumber": 3,
-            "lessonNumber": 9,
             "wholeName": "prog.apk.mob LI 40",
+            "lessonNumber": 9,
+            "teacherData": [
+                {
+                    "shortName": "LI",
+                    "link": "n77.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "40",
+                    "link": "s16.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prog.apk.mob"
+            ],
             "attributes": [
                 "n77.html",
-                "s16.html"
+                "s16.html",
+                "o13.html"
             ],
             "wholeHour": "14:55-15:40",
             "startHour": "14:55",
             "endHour": "15:40",
-            "subject": "prog.apk.mob",
-            "teacherData": {
-                "shortName": "LI",
-                "link": "n77.html"
-            },
-            "classroomData": {
-                "shortName": "40",
-                "link": "s16.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n77.html"
+            ],
+            "classroomAttributes": [
+                "s16.html"
+            ]
         },
         {
-            "dayNumber": 3,
-            "lessonNumber": 10,
             "wholeName": "j.polski Si 47",
+            "lessonNumber": 10,
+            "teacherData": [
+                {
+                    "shortName": "Si",
+                    "link": "n54.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "47",
+                    "link": "s23.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.polski"
+            ],
             "attributes": [
                 "n54.html",
-                "s23.html"
+                "s23.html",
+                "o13.html"
             ],
             "wholeHour": "15:45-16:30",
             "startHour": "15:45",
             "endHour": "16:30",
-            "subject": "j.polski",
-            "teacherData": {
-                "shortName": "Si",
-                "link": "n54.html"
-            },
-            "classroomData": {
-                "shortName": "47",
-                "link": "s23.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n54.html"
+            ],
+            "classroomAttributes": [
+                "s23.html"
+            ]
         },
         {
-            "dayNumber": 3,
-            "lessonNumber": 11,
             "wholeName": "j.polski Si 47",
+            "lessonNumber": 11,
+            "teacherData": [
+                {
+                    "shortName": "Si",
+                    "link": "n54.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "47",
+                    "link": "s23.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "j.polski"
+            ],
             "attributes": [
                 "n54.html",
-                "s23.html"
+                "s23.html",
+                "o13.html"
             ],
             "wholeHour": "16:35-17:20",
             "startHour": "16:35",
             "endHour": "17:20",
-            "subject": "j.polski",
-            "teacherData": {
-                "shortName": "Si",
-                "link": "n54.html"
-            },
-            "classroomData": {
-                "shortName": "47",
-                "link": "s23.html"
-            }
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n54.html"
+            ],
+            "classroomAttributes": [
+                "s23.html"
+            ]
         },
         {
-            "dayNumber": 3,
+            "wholeName": null,
             "lessonNumber": 12,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "17:25-18:10",
             "startHour": "17:25",
             "endHour": "18:10",
-            "subject": "&nbsp;"
+            "dayNumber": 3,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         }
     ],
     [
         {
-            "dayNumber": 4,
+            "wholeName": null,
             "lessonNumber": 0,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:00- 7:45",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:00- 7:45",
             "startHour": "7:00",
             "endHour": "7:45",
-            "subject": "&nbsp;"
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 4,
+            "wholeName": null,
             "lessonNumber": 1,
-            "wholeName": "&nbsp;",
-            "wholeHour": "7:50- 8:35",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 7:50- 8:35",
             "startHour": "7:50",
             "endHour": "8:35",
-            "subject": "&nbsp;"
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 4,
+            "wholeName": null,
             "lessonNumber": 2,
-            "wholeName": "&nbsp;",
-            "wholeHour": "8:40- 9:25",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
+            "wholeHour": " 8:40- 9:25",
             "startHour": "8:40",
             "endHour": "9:25",
-            "subject": "&nbsp;"
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 3,
             "wholeName": "prac.apk.mob-1/2 WG 107",
+            "lessonNumber": 3,
+            "teacherData": [
+                {
+                    "shortName": "WG",
+                    "link": "n90.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.mob-1/2"
+            ],
             "attributes": [
                 "n90.html",
-                "s13.html"
+                "s13.html",
+                "o13.html"
             ],
-            "wholeHour": "9:30-10:15",
+            "wholeHour": " 9:30-10:15",
             "startHour": "9:30",
             "endHour": "10:15",
-            "subject": "prac.apk.mob-1/2",
-            "teacherData": {
-                "shortName": "WG",
-                "link": "n90.html"
-            },
-            "classroomData": {
-                "shortName": "107",
-                "link": "s13.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n90.html"
+            ],
+            "classroomAttributes": [
+                "s13.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 4,
             "wholeName": "prac.apk.mob-1/2 WG 107",
+            "lessonNumber": 4,
+            "teacherData": [
+                {
+                    "shortName": "WG",
+                    "link": "n90.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "107",
+                    "link": "s13.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "prac.apk.mob-1/2"
+            ],
             "attributes": [
                 "n90.html",
-                "s13.html"
+                "s13.html",
+                "o13.html"
             ],
             "wholeHour": "10:30-11:15",
             "startHour": "10:30",
             "endHour": "11:15",
-            "subject": "prac.apk.mob-1/2",
-            "teacherData": {
-                "shortName": "WG",
-                "link": "n90.html"
-            },
-            "classroomData": {
-                "shortName": "107",
-                "link": "s13.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n90.html"
+            ],
+            "classroomAttributes": [
+                "s13.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 5,
             "wholeName": "pra.str.apk.-1/2 DP 38",
+            "lessonNumber": 5,
+            "teacherData": [
+                {
+                    "shortName": "DP",
+                    "link": "n50.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "38",
+                    "link": "s11.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "pra.str.apk.-1/2"
+            ],
             "attributes": [
                 "n50.html",
-                "s11.html"
+                "s11.html",
+                "o13.html"
             ],
             "wholeHour": "11:20-12:05",
             "startHour": "11:20",
             "endHour": "12:05",
-            "subject": "pra.str.apk.-1/2",
-            "teacherData": {
-                "shortName": "DP",
-                "link": "n50.html"
-            },
-            "classroomData": {
-                "shortName": "38",
-                "link": "s11.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n50.html"
+            ],
+            "classroomAttributes": [
+                "s11.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 6,
             "wholeName": "pra.str.apk.-1/2 DP 38",
+            "lessonNumber": 6,
+            "teacherData": [
+                {
+                    "shortName": "DP",
+                    "link": "n50.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "38",
+                    "link": "s11.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "pra.str.apk.-1/2"
+            ],
             "attributes": [
                 "n50.html",
-                "s11.html"
+                "s11.html",
+                "o13.html"
             ],
             "wholeHour": "12:10-12:55",
             "startHour": "12:10",
             "endHour": "12:55",
-            "subject": "pra.str.apk.-1/2",
-            "teacherData": {
-                "shortName": "DP",
-                "link": "n50.html"
-            },
-            "classroomData": {
-                "shortName": "38",
-                "link": "s11.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n50.html"
+            ],
+            "classroomAttributes": [
+                "s11.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 7,
             "wholeName": "matematyka EP 40",
+            "lessonNumber": 7,
+            "teacherData": [
+                {
+                    "shortName": "EP",
+                    "link": "n49.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "40",
+                    "link": "s16.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "matematyka"
+            ],
             "attributes": [
                 "n49.html",
-                "s16.html"
+                "s16.html",
+                "o13.html"
             ],
             "wholeHour": "13:15-14:00",
             "startHour": "13:15",
             "endHour": "14:00",
-            "subject": "matematyka",
-            "teacherData": {
-                "shortName": "EP",
-                "link": "n49.html"
-            },
-            "classroomData": {
-                "shortName": "40",
-                "link": "s16.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n49.html"
+            ],
+            "classroomAttributes": [
+                "s16.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 8,
             "wholeName": "matematyka EP 40",
+            "lessonNumber": 8,
+            "teacherData": [
+                {
+                    "shortName": "EP",
+                    "link": "n49.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "40",
+                    "link": "s16.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "matematyka"
+            ],
             "attributes": [
                 "n49.html",
-                "s16.html"
+                "s16.html",
+                "o13.html"
             ],
             "wholeHour": "14:05-14:50",
             "startHour": "14:05",
             "endHour": "14:50",
-            "subject": "matematyka",
-            "teacherData": {
-                "shortName": "EP",
-                "link": "n49.html"
-            },
-            "classroomData": {
-                "shortName": "40",
-                "link": "s16.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n49.html"
+            ],
+            "classroomAttributes": [
+                "s16.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 9,
             "wholeName": "historia KŃ 44",
+            "lessonNumber": 9,
+            "teacherData": [
+                {
+                    "shortName": "KŃ",
+                    "link": "n79.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "44",
+                    "link": "s20.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "historia"
+            ],
             "attributes": [
                 "n79.html",
-                "s20.html"
+                "s20.html",
+                "o13.html"
             ],
             "wholeHour": "14:55-15:40",
             "startHour": "14:55",
             "endHour": "15:40",
-            "subject": "historia",
-            "teacherData": {
-                "shortName": "KŃ",
-                "link": "n79.html"
-            },
-            "classroomData": {
-                "shortName": "44",
-                "link": "s20.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n79.html"
+            ],
+            "classroomAttributes": [
+                "s20.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 10,
             "wholeName": "godz.wych Kg 13",
+            "lessonNumber": 10,
+            "teacherData": [
+                {
+                    "shortName": "Kg",
+                    "link": "n31.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "13",
+                    "link": "s8.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "godz.wych"
+            ],
             "attributes": [
                 "n31.html",
-                "s8.html"
+                "s8.html",
+                "o13.html"
             ],
             "wholeHour": "15:45-16:30",
             "startHour": "15:45",
             "endHour": "16:30",
-            "subject": "godz.wych",
-            "teacherData": {
-                "shortName": "Kg",
-                "link": "n31.html"
-            },
-            "classroomData": {
-                "shortName": "13",
-                "link": "s8.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n31.html"
+            ],
+            "classroomAttributes": [
+                "s8.html"
+            ]
         },
         {
-            "dayNumber": 4,
-            "lessonNumber": 11,
             "wholeName": "podst.progra WG 4",
+            "lessonNumber": 11,
+            "teacherData": [
+                {
+                    "shortName": "WG",
+                    "link": "n90.html"
+                }
+            ],
+            "classroomData": [
+                {
+                    "shortName": "4",
+                    "link": "s2.html"
+                }
+            ],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [
+                "podst.progra"
+            ],
             "attributes": [
                 "n90.html",
-                "s2.html"
+                "s2.html",
+                "o13.html"
             ],
             "wholeHour": "16:35-17:20",
             "startHour": "16:35",
             "endHour": "17:20",
-            "subject": "podst.progra",
-            "teacherData": {
-                "shortName": "WG",
-                "link": "n90.html"
-            },
-            "classroomData": {
-                "shortName": "4",
-                "link": "s2.html"
-            }
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [
+                "n90.html"
+            ],
+            "classroomAttributes": [
+                "s2.html"
+            ]
         },
         {
-            "dayNumber": 4,
+            "wholeName": null,
             "lessonNumber": 12,
-            "wholeName": "&nbsp;",
+            "teacherData": [],
+            "classroomData": [],
+            "classData": [
+                {
+                    "shortName": "3dT 3programista",
+                    "link": "o13.html"
+                }
+            ],
+            "subject": [],
+            "attributes": [
+                "o13.html"
+            ],
             "wholeHour": "17:25-18:10",
             "startHour": "17:25",
             "endHour": "18:10",
-            "subject": "&nbsp;"
+            "dayNumber": 4,
+            "classAttributes": [
+                "o13.html"
+            ],
+            "teacherAttributes": [],
+            "classroomAttributes": []
         }
     ]
 ]
