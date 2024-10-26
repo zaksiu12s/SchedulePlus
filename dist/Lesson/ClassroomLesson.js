@@ -18,6 +18,8 @@ export default class ClassroomLesson extends Lesson {
         return this;
     }
     generateSubject() {
+        if (!this.wholeName)
+            return this;
         const subject = this.wholeName.split(" ")[2];
         if (!subject)
             return this;
@@ -25,6 +27,8 @@ export default class ClassroomLesson extends Lesson {
         return this;
     }
     generateClassData() {
+        if (!this.wholeName)
+            return this;
         if (!this.wholeName.split(" ")[1])
             return this;
         if (!this.attributes || !this.attributes[1]) {
@@ -41,6 +45,8 @@ export default class ClassroomLesson extends Lesson {
         return this;
     }
     generateTeacherData() {
+        if (!this.wholeName)
+            return this;
         if (!this.wholeName.split(" ")[0])
             return this;
         if (!this.attributes || !this.attributes[0]) {

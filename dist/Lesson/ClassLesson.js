@@ -4,6 +4,8 @@ export default class ClassLesson extends Lesson {
         super(lesson, wholeName, lessonNumber, attributes, wholeHour);
     }
     generateSubject() {
+        if (!this.wholeName)
+            return this;
         this.wholeName.split("\n").forEach((group) => {
             const split = group.trim().split(" ")[0];
             if (split) {
@@ -13,6 +15,8 @@ export default class ClassLesson extends Lesson {
         return this;
     }
     generateClassroomData() {
+        if (!this.wholeName)
+            return this;
         this.wholeName.split("\n").forEach((group, index) => {
             const split = group.trim().split(" ")[2];
             const attributes = this.classroomAttributes;
@@ -27,6 +31,8 @@ export default class ClassLesson extends Lesson {
         return this;
     }
     generateTeacherData() {
+        if (!this.wholeName)
+            return this;
         this.wholeName.split("\n").forEach((group, index) => {
             const split = group.trim().split(" ")[1];
             const attributes = this.teacherAttributes;

@@ -43,9 +43,7 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
       const responseObject: LessonGetData[] = [];
 
       lessonsAsObjects.forEach((lesson: Lesson, index: number) => {
-        lesson.setDayNumber(index);
-        lesson.header = header;
-        responseObject.push(lesson.setHeader(header, shortLink).getData());
+        responseObject.push(lesson.setDayNumber(index).setHeader(header, shortLink).getData());
       })
 
       res.send(responseObject);

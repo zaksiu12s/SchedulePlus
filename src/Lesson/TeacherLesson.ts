@@ -24,6 +24,7 @@ export default class TeacherLesson extends Lesson {
     }
 
     override generateSubject(): this {
+        if (!this.wholeName) return this;
         const subject = this.wholeName.split(" ")[1]
         if (!subject) return this;
 
@@ -33,6 +34,7 @@ export default class TeacherLesson extends Lesson {
     }
 
     override generateClassData(): this {
+        if (!this.wholeName) return this;
         if (!this.wholeName.split(" ")[0]) return this;
         if (!this.attributes || !this.attributes[0]) {
             this.classData.push({
@@ -51,6 +53,7 @@ export default class TeacherLesson extends Lesson {
     }
 
     override generateClassroomData(): this {
+        if (!this.wholeName) return this;
         if (!this.wholeName.split(" ")[2]) return this;
         if (!this.attributes || !this.attributes[1]) {
             this.classroomData.push({

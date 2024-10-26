@@ -1,7 +1,7 @@
 export default class Lesson {
     constructor(lesson, wholeName, lessonNumber, attributes, wholeHour) {
         this.schoolDays = 5;
-        this.wholeName = "";
+        this.wholeName = null;
         this.lessonNumber = null;
         this.teacherData = [];
         this.classroomData = [];

@@ -7,6 +7,7 @@ export default class ClassLesson extends Lesson {
     }
 
     override generateSubject(): this {
+        if (!this.wholeName) return this;
         this.wholeName.split("\n").forEach((group) => {
             const split = group.trim().split(" ")[0];
 
@@ -19,6 +20,7 @@ export default class ClassLesson extends Lesson {
     }
 
     override generateClassroomData(): this {
+        if (!this.wholeName) return this;
         this.wholeName.split("\n").forEach((group, index) => {
             const split = group.trim().split(" ")[2];
             const attributes = this.classroomAttributes;
@@ -34,6 +36,7 @@ export default class ClassLesson extends Lesson {
     }
 
     override generateTeacherData(): this {
+        if (!this.wholeName) return this;
         this.wholeName.split("\n").forEach((group, index) => {
             const split = group.trim().split(" ")[1];
             const attributes = this.teacherAttributes;

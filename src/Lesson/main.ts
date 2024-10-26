@@ -1,7 +1,7 @@
 import { HTMLElement as ParsedHTMLElement } from 'node-html-parser';
 
 export interface LessonGetData {
-    wholeName: string,
+    wholeName: string | null,
     lessonNumber: number | null,
     teacherData: {
         shortName: string | undefined;
@@ -30,8 +30,8 @@ export default class Lesson {
     readonly schoolDays: number = 5;
 
     private lesson: ParsedHTMLElement;
-    public header: string | undefined;
-    protected wholeName: string = "";
+    protected header: string | undefined;
+    protected wholeName: string | null = null;
     private lessonNumber: number | null = null;
 
     protected teacherData: {
