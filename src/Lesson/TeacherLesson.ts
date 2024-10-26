@@ -6,6 +6,18 @@ export default class TeacherLesson extends Lesson {
         super(lesson, wholeName, lessonNumber, attributes, wholeHour);
     }
 
+    override setHeader(header: string | undefined, link: string | undefined): this {
+        if (header) {
+            this.header = header;
+            this.teacherData = {
+                shortName: this.header,
+                link
+            };
+        }
+
+        return this;
+    }
+
     override generateSubject(): this {
         if (!this.wholeName.split(" ")[1]) return this;
 

@@ -10,6 +10,7 @@ const router = express.Router();
 router.get("/specifiedTimetable", async (req, res, next) => {
     const link = req.query.link?.toString();
     const formatAsDays = (req.query.formatAsDays == "true");
+    const shortLink = link?.substring(link.lastIndexOf("/") + 1);
     if (!link) {
         res.status(400).json({ message: "Please provide a valid link." });
         return;
@@ -21,13 +22,16 @@ router.get("/specifiedTimetable", async (req, res, next) => {
     }
     try {
         const timetableWebsiteData = await getWebsiteData(link);
+        const timetableWebsiteDataDOM = parse(timetableWebsiteData);
+        const header = timetableWebsiteDataDOM.querySelector(".tytulnapis")?.innerText;
         const lessonElements = getLessonElements(timetableWebsiteData);
         const lessonsAsObjects = getLessonsAsObject(lessonElements, branchType);
         if (!formatAsDays) {
             const responseObject = [];
             lessonsAsObjects.forEach((lesson, index) => {
                 lesson.setDayNumber(index);
-                responseObject.push(lesson.getData());
+                lesson.header = header;
+                responseObject.push(lesson.setHeader(header, shortLink).getData());
             });
             res.send(responseObject);
         }
@@ -37,7 +41,10 @@ router.get("/specifiedTimetable", async (req, res, next) => {
             for (let i = 0; i < schoolDays; i++) {
                 const currentDayLessons = [];
                 for (let j = i; j < lessonsAsObjects.length; j += 5) {
-                    currentDayLessons.push(lessonsAsObjects[j]?.setDayNumber(i).getData());
+                    const currentLesson = lessonsAsObjects[j];
+                    if (currentLesson) {
+                        currentDayLessons.push(currentLesson.setDayNumber(i).setHeader(header, shortLink).getData());
+                    }
                 }
                 responseObject.push(currentDayLessons);
             }

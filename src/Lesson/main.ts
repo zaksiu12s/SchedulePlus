@@ -24,22 +24,23 @@ export interface LessonGetData {
         shortName: string | undefined,
         link?: string | undefined,
     }[] | {},
-    subject: string | undefined | string[],
+    subject: string | null | string[],
     attributes: string[],
     wholeHour: string | null,
     startHour: string | null,
     endHour: string | null,
     dayNumber: number | null,
-    classAttributes: string[] | undefined,
-    teacherAttributes: string[] | undefined,
-    classroomAttributes: string[] | undefined,
+    classAttributes: string[],
+    teacherAttributes: string[],
+    classroomAttributes: string[],
 }
 
 export default class Lesson {
     readonly schoolDays: number = 5;
 
     private lesson: ParsedHTMLElement;
-    protected wholeName: string;
+    public header: string | undefined;
+    protected wholeName: string = "";
     private lessonNumber: number | null = null;
 
     protected teacherData: {
@@ -66,7 +67,7 @@ export default class Lesson {
         link?: string | undefined,
     }[] | {} = {}
 
-    protected subject: string | undefined | string[];
+    protected subject: string | null | string[] = null;
     protected attributes: string[] = [];
     private wholeHour: string | null = null;
     private startHour: string | null = null;
@@ -81,7 +82,10 @@ export default class Lesson {
 
         if (lessonNumber && !isNaN(lessonNumber)) this.lessonNumber = lessonNumber - 1;
 
-        this.wholeName = wholeName.replace("\n", " \n ").trim();
+        if (wholeName !== "&nbsp;") {
+            this.wholeName = wholeName.replace("\n", " \n ").trim();
+        }
+
         if (attributes && attributes.length > 0) this.attributes = attributes;
 
         if (wholeHour) {
@@ -121,6 +125,10 @@ export default class Lesson {
 
         return this;
     }
+
+    public setHeader(header: string | undefined, link: string | undefined): this { return this };
+
+
     public getData(): LessonGetData {
         return {
             wholeName: this.wholeName,

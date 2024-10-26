@@ -62,6 +62,16 @@ export default class ClassLesson extends Lesson {
         this.subject = subjectArray;
         return this;
     }
+    setHeader(header, link) {
+        if (header) {
+            this.header = header;
+            this.classData = {
+                shortName: this.header,
+                link
+            };
+        }
+        return this;
+    }
     generateClassroomData() {
         if (!this.wholeName.split(" ")[2])
             return this;

@@ -1,10 +1,12 @@
 export default class Lesson {
     constructor(lesson, wholeName, lessonNumber, attributes, wholeHour) {
         this.schoolDays = 5;
+        this.wholeName = "";
         this.lessonNumber = null;
         this.teacherData = {};
         this.classroomData = {};
         this.classData = {};
+        this.subject = null;
         this.attributes = [];
         this.wholeHour = null;
         this.startHour = null;
@@ -16,7 +18,9 @@ export default class Lesson {
         this.lesson = lesson;
         if (lessonNumber && !isNaN(lessonNumber))
             this.lessonNumber = lessonNumber - 1;
-        this.wholeName = wholeName.replace("\n", " \n ").trim();
+        if (wholeName !== "&nbsp;") {
+            this.wholeName = wholeName.replace("\n", " \n ").trim();
+        }
         if (attributes && attributes.length > 0)
             this.attributes = attributes;
         if (wholeHour) {
@@ -58,6 +62,8 @@ export default class Lesson {
         });
         return this;
     }
+    setHeader(header, link) { return this; }
+    ;
     getData() {
         return {
             wholeName: this.wholeName,

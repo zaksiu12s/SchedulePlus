@@ -5,5 +5,6 @@ export default class ClassLesson extends Lesson {
     generateSubject(): this;
     generateTeacherData(): this;
     divideToGroups(): this;
+    setHeader(header: string | undefined, link: string | undefined): this;
     generateClassroomData(): this;
 }

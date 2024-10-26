@@ -23,19 +23,20 @@ export interface LessonGetData {
         shortName: string | undefined;
         link?: string | undefined;
     }[] | {};
-    subject: string | undefined | string[];
+    subject: string | null | string[];
     attributes: string[];
     wholeHour: string | null;
     startHour: string | null;
     endHour: string | null;
     dayNumber: number | null;
-    classAttributes: string[] | undefined;
-    teacherAttributes: string[] | undefined;
-    classroomAttributes: string[] | undefined;
+    classAttributes: string[];
+    teacherAttributes: string[];
+    classroomAttributes: string[];
 }
 export default class Lesson {
     readonly schoolDays: number;
     private lesson;
+    header: string | undefined;
     protected wholeName: string;
     private lessonNumber;
     protected teacherData: {
@@ -59,7 +60,7 @@ export default class Lesson {
         shortName: string | undefined;
         link?: string | undefined;
     }[] | {};
-    protected subject: string | undefined | string[];
+    protected subject: string | null | string[];
     protected attributes: string[];
     private wholeHour;
     private startHour;
@@ -76,5 +77,6 @@ export default class Lesson {
     generateClassData(): this;
     setDayNumber(dayNumber: number): this;
     setSpecifiedAttribute(): this;
+    setHeader(header: string | undefined, link: string | undefined): this;
     getData(): LessonGetData;
 }

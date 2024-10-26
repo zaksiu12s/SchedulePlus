@@ -3,6 +3,16 @@ export default class TeacherLesson extends Lesson {
     constructor(lesson, wholeName, lessonNumber, attributes, wholeHour) {
         super(lesson, wholeName, lessonNumber, attributes, wholeHour);
     }
+    setHeader(header, link) {
+        if (header) {
+            this.header = header;
+            this.teacherData = {
+                shortName: this.header,
+                link
+            };
+        }
+        return this;
+    }
     generateSubject() {
         if (!this.wholeName.split(" ")[1])
             return this;

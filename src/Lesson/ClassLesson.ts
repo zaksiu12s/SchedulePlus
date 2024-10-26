@@ -74,6 +74,18 @@ export default class ClassLesson extends Lesson {
         return this;
     }
 
+    override setHeader(header: string | undefined, link: string | undefined): this {
+        if (header) {
+            this.header = header;
+            this.classData = {
+                shortName: this.header,
+                link
+            };
+        }
+
+        return this;
+    }
+
     override generateClassroomData(): this {
         if (!this.wholeName.split(" ")[2]) return this;
         if (!this.attributes || !this.attributes[1]) {
