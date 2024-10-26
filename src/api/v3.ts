@@ -137,7 +137,7 @@ function getLessonsAsObject(lessonsByDay: (ParsedHTMLElement | undefined)[], bra
       }
 
       if (lessonObject !== undefined) {
-        lessonObject.generateTeacherData().generateSubject().generateClassroomData().generateClassData().divideToGroups();
+        lessonObject.generateTeacherData().generateSubject().generateClassroomData().generateClassData();
         lessonsAsObjects.push(lessonObject);
       }
     }

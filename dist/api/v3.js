@@ -106,7 +106,7 @@ function getLessonsAsObject(lessonsByDay, branchType) {
                 lessonObject = new ClassroomLesson(lesson, lesson.innerText, lessonNumber, attributes, hour);
             }
             if (lessonObject !== undefined) {
-                lessonObject.generateTeacherData().generateSubject().generateClassroomData().generateClassData().divideToGroups();
+                lessonObject.generateTeacherData().generateSubject().generateClassroomData().generateClassData();
                 lessonsAsObjects.push(lessonObject);
             }
         }

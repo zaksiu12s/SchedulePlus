@@ -52,7 +52,6 @@ export default class Lesson {
     protected teacherAttributes: string[];
     protected classroomAttributes: string[];
     constructor(lesson: ParsedHTMLElement, wholeName: string, lessonNumber?: number, attributes?: string[], wholeHour?: string);
-    divideToGroups(): void;
     generateSubject(): this;
     generateClassroomData(): this;
     generateTeacherData(): this;

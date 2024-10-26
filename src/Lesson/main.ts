@@ -84,7 +84,6 @@ export default class Lesson {
         }
     }
 
-    public divideToGroups() { }
     public generateSubject(): this { return this };
     public generateClassroomData(): this { return this };
     public generateTeacherData(): this { return this };

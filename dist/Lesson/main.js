@@ -35,7 +35,6 @@ export default class Lesson {
             this.setSpecifiedAttribute();
         }
     }
-    divideToGroups() { }
     generateSubject() { return this; }
     ;
     generateClassroomData() { return this; }
