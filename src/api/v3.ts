@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction, Router } from "express";
 import { parse, HTMLElement as ParsedHTMLElement } from "node-html-parser";
-import "dotenv/config";
 
 import BranchTimetableSchema, { IBranchTimetableSchema } from "../models/branchTimetableModel.js";
 
