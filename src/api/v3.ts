@@ -43,7 +43,7 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
       if (data?.timetableData && data?.timetableDataAsDays) {
         if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
           console.log("Scrape time");
-          await BranchTimetableSchema.deleteOne({ link: shortLink });
+          await BranchTimetableSchema.deleteMany({ link: shortLink });
         } else {
           if (formatAsDays) {
             res.send(JSON.parse(data.timetableDataAsDays));
