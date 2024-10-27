@@ -10,6 +10,7 @@ import ClassroomLesson from "../classes/Lesson/ClassroomLesson.js";
 import TeacherLesson from "../classes/Lesson/TeacherLesson.js";
 const router = express.Router();
 router.get("/specifiedTimetable", async (req, res, next) => {
+    console.log("request received");
     const link = req.query.link?.toString();
     const formatAsDays = (req.query.formatAsDays == "true");
     const shortLink = link?.substring(link.lastIndexOf("/") + 1);
@@ -26,21 +27,21 @@ router.get("/specifiedTimetable", async (req, res, next) => {
         try {
             const data = await BranchTimetableSchema.findOne({ link: shortLink });
             const currentDate = new Date();
-            if (!data?.timetableData || !data?.timetableDataAsDays) {
-                return;
-            }
-            if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
-                console.log("Scrape time");
-                await BranchTimetableSchema.deleteMany({ link: shortLink });
-                return;
-            }
-            if (formatAsDays) {
-                res.send(JSON.parse(data.timetableDataAsDays));
-                return;
-            }
-            else {
-                res.send(JSON.parse(data.timetableData));
-                return;
+            if (data?.timetableData && data?.timetableDataAsDays) {
+                if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
+                    console.log("Scrape time");
+                    await BranchTimetableSchema.deleteOne({ link: shortLink });
+                }
+                else {
+                    if (formatAsDays) {
+                        res.send(JSON.parse(data.timetableDataAsDays));
+                        return;
+                    }
+                    else {
+                        res.send(JSON.parse(data.timetableData));
+                        return;
+                    }
+                }
             }
         }
         catch (err) {
@@ -103,6 +104,7 @@ async function saveTimetableToDB(lessonsAsObjects, header, shortLink, asDays) {
         timetableData: JSON.stringify(data),
         timetableDataAsDays: JSON.stringify(daysOfLessons),
     });
+    console.log('saving');
     timetableData.save();
 }
 function createResponseObject(lessonsAsObjects, header, shortLink, asDays) {

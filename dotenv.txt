@@ -1,3 +1,4 @@
 PORT=4000
 USE_DB=true
 MONGODB_URI=mongodb://localhost:27017/SchedulePlus
+MONGODB_URI=mongodb://mongo:GehpgjGCyuWeRSZcgYsMboAbTSSJdleq@autorack.proxy.rlwy.net:10216/SchedulePlus

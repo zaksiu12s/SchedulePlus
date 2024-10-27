@@ -18,6 +18,7 @@ import TeacherLesson from "../classes/Lesson/TeacherLesson.js";
 const router: Router = express.Router();
 
 router.get("/specifiedTimetable", async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  console.log("request received");
   const link: string | undefined = req.query.link?.toString();
   const formatAsDays: boolean = (req.query.formatAsDays == "true");
 
@@ -37,25 +38,22 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
   if (process.env.USE_DB === "true") {
     try {
       const data = await BranchTimetableSchema.findOne<IBranchTimetableSchema>({ link: shortLink });
+
       const currentDate = new Date();
 
-      if (!data?.timetableData || !data?.timetableDataAsDays) {
-        return;
-      }
-
-      if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
-        console.log("Scrape time");
-        await BranchTimetableSchema.deleteMany({ link: shortLink });
-
-        return;
-      }
-
-      if (formatAsDays) {
-        res.send(JSON.parse(data.timetableDataAsDays));
-        return;
-      } else {
-        res.send(JSON.parse(data.timetableData));
-        return;
+      if (data?.timetableData && data?.timetableDataAsDays) {
+        if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
+          console.log("Scrape time");
+          await BranchTimetableSchema.deleteOne({ link: shortLink });
+        } else {
+          if (formatAsDays) {
+            res.send(JSON.parse(data.timetableDataAsDays));
+            return;
+          } else {
+            res.send(JSON.parse(data.timetableData));
+            return;
+          }
+        }
       }
     } catch (err) {
       console.log(err);
@@ -135,8 +133,8 @@ async function saveTimetableToDB(lessonsAsObjects: Lesson[], header: string | un
     timetableDataAsDays: JSON.stringify(daysOfLessons),
   })
 
+  console.log('saving');
   timetableData.save();
-
 }
 
 function createResponseObject(lessonsAsObjects: Lesson[], header: string | undefined, shortLink: string | undefined, asDays: boolean): LessonGetData[] | LessonGetData[][] {
