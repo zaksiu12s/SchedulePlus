@@ -3,7 +3,6 @@
 // express - to handle requests from client
 // node-html-parser - to convert text data from fetch request to js objects with HTML DOM
 import express, { Express } from "express";
-import "dotenv/config";
 import mongoose from "mongoose";
 
 const app: Express = express();
