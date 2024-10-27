@@ -4,24 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <!-- <script src="./index.js" defer></script> -->
-    <link rel="stylesheet" href="output.css" />
   </head>
-  <body class="bg-green-300 text-white font-mono">
-    <div>
-      <select
-        class="w-full text-2xl fixed p-3 top-0 left-0 bg-green-500 text-white font-bold"
-        title="branchSelect"
-        onchange="changeBranchTimetable()"
-      >
-        <optgroup class="text-xl" label="Classes"></optgroup>
-        <optgroup class="text-xl" label="Teachers"></optgroup>
-        <optgroup class="text-xl" label="Classrooms"></optgroup>
-      </select>
-      <table
-        class="mt-16 mx-auto text-lg max-w-full"
-        data-id="timetable"
-      ></table>
-    </div>
+  <body>
+    <script>
+      async function updateAllData() {
+        const response = await fetch(
+          "http://localhost:4000/api/v3/allBranches?link=https://zsem.edu.pl/plany/lista.html"
+        );
+
+        const branches = await response.json();
+
+        for (let i = 0; i < branches.length; i++) {
+          branches[i]?.forEach(async (element) => {
+            const response = await fetch(
+              `http://localhost:4000/api/v3/specifiedTimetable?link=https://zsem.edu.pl/plany/plany/${element.link}`
+            );
+
+            console.log(await response.json());
+          });
+        }
+      }
+
+      updateAllData();
+    </script>
   </body>
 </html>

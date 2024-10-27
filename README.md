@@ -1,6 +1,7 @@
 # <h1 align="center">SchedulePlus</h1>
 
 ```diff
+ADDING MONGODB SUPPORT
 + ONLY SUPPORTS API v3
 - API v1 and API v2 is no longer supported in this version!
 ```

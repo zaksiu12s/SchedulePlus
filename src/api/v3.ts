@@ -1,5 +1,9 @@
 import express, { Request, Response, NextFunction, Router } from "express";
 import { parse, HTMLElement as ParsedHTMLElement } from "node-html-parser";
+import "dotenv/config";
+
+import BranchTimetableSchema, { IBranchTimetableSchema } from "../models/branchTimetableModel.js";
+
 
 import BranchData from "../classes/BranchData/main.js";
 import TeacherData from "../classes/BranchData/TeacherData.js";
@@ -30,6 +34,34 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
     return;
   }
 
+  if (process.env.USE_DB === "true") {
+    try {
+      const data = await BranchTimetableSchema.findOne<IBranchTimetableSchema>({ link: shortLink });
+      const currentDate = new Date();
+
+      if (!data?.timetableData || !data?.timetableDataAsDays) {
+        return;
+      }
+
+      if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
+        console.log("Scrape time");
+        await BranchTimetableSchema.deleteMany({ link: shortLink });
+
+        return;
+      }
+
+      if (formatAsDays) {
+        res.send(JSON.parse(data.timetableDataAsDays));
+        return;
+      } else {
+        res.send(JSON.parse(data.timetableData));
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   try {
     const timetableWebsiteData: string = await getWebsiteData(link);
     const timetableWebsiteDataDOM: ParsedHTMLElement = parse(timetableWebsiteData);
@@ -38,6 +70,10 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
 
     const lessonElements: ParsedHTMLElement[] = timetableWebsiteDataDOM.querySelectorAll("td.l");
     const lessonsAsObjects: Lesson[] = getLessonsAsObject(lessonElements, branchType);
+
+    if (process.env.USE_DB === "true") {
+      await saveTimetableToDB(lessonsAsObjects, header, shortLink, formatAsDays);
+    }
 
     res.send(createResponseObject(lessonsAsObjects, header, shortLink, formatAsDays));
   } catch (err) {
@@ -71,13 +107,47 @@ router.get("/allBranches", async (req: Request, res: Response, next: NextFunctio
   }
 })
 
+async function saveTimetableToDB(lessonsAsObjects: Lesson[], header: string | undefined, shortLink: string | undefined, asDays: boolean) {
+  if (!shortLink || !header) {
+    return
+  }
+
+  const schoolDays: number = 5;
+
+  const data = lessonsAsObjects.map((lesson, index) =>
+    lesson.setDayNumber(index).setHeader(header, shortLink).getData()
+  );
+
+  const daysOfLessons: LessonGetData[][] = [];
+  for (let day: number = 0; day < schoolDays; day++) {
+    const lessonsForDay: LessonGetData[] = lessonsAsObjects
+      .filter((_, index) => index % schoolDays === day)
+      .map((lesson) => lesson.setDayNumber(day).setHeader(header, shortLink).getData());
+
+    daysOfLessons.push(lessonsForDay);
+  }
+
+
+  const timetableData = new BranchTimetableSchema<IBranchTimetableSchema>({
+    link: shortLink,
+    header: header,
+    timetableData: JSON.stringify(data),
+    timetableDataAsDays: JSON.stringify(daysOfLessons),
+  })
+
+  timetableData.save();
+
+}
+
 function createResponseObject(lessonsAsObjects: Lesson[], header: string | undefined, shortLink: string | undefined, asDays: boolean): LessonGetData[] | LessonGetData[][] {
   const schoolDays: number = 5;
 
   if (!asDays) {
-    return lessonsAsObjects.map((lesson, index) =>
+    const data = lessonsAsObjects.map((lesson, index) =>
       lesson.setDayNumber(index).setHeader(header, shortLink).getData()
     );
+
+    return data;
   }
 
   const daysOfLessons: LessonGetData[][] = [];
