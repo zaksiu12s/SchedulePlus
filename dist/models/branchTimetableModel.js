@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 const getMidnightToday = () => {
     const today = new Date();
-    if (today.getHours() > 12) {
-        today.setDate(today.getDate() + 1);
-    }
-    today.setHours(12, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    today.setHours(0, 0, 0, 0);
     return today;
 };
 const BranchTimetableSchema = new mongoose.Schema({

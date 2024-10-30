@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Lesson, { LessonGetData } from "../classes/Lesson/main.js";
 
 export interface IBranchTimetableSchema {
     link: string,
@@ -13,11 +12,8 @@ export interface IBranchTimetableSchema {
 const getMidnightToday = (): Date => {
     const today = new Date();
 
-    if (today.getHours() > 12) {
-        today.setDate(today.getDate() + 1);
-    }
-
-    today.setHours(12, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    today.setHours(0, 0, 0, 0);
     return today;
 };
 
