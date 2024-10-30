@@ -17,14 +17,24 @@ import TeacherLesson from "../classes/Lesson/TeacherLesson.js";
 const router: Router = express.Router();
 
 router.get("/allTimetables", async (req, res) => {
+  const formatAsDays: boolean = (req.query.formatAsDays == "true");
+
   try {
     const data = await BranchTimetableSchema.find<IBranchTimetableSchema>();
 
-    const arr: any[] = await Promise.all(data.map(async (timetable) => {
-      return await JSON.parse(timetable.timetableData);
-    }));
+    if (!formatAsDays) {
+      const arr: any[] = await Promise.all(data.map(async (timetable) => {
+        return await JSON.parse(timetable.timetableData);
+      }));
 
-    res.json(arr);
+      res.json(arr);
+    } else {
+      const arr: any[] = await Promise.all(data.map(async (timetable) => {
+        return await JSON.parse(timetable.timetableDataAsDays);
+      }));
+
+      res.json(arr);
+    }
     return;
   } catch (err) {
     console.log(err);
@@ -53,14 +63,14 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
 
   if (process.env.USE_DB === "true") {
     try {
-      const data = await BranchTimetableSchema.findOne<IBranchTimetableSchema>({ link: shortLink });
+      const data = await BranchTimetableSchema.findOne<IBranchTimetableSchema>({ link: link });
 
       const currentDate = new Date();
 
       if (data?.timetableData && data?.timetableDataAsDays) {
         if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
           console.log("Scrape time");
-          await BranchTimetableSchema.deleteMany({ link: shortLink });
+          await BranchTimetableSchema.deleteMany({ link: link });
         } else {
           if (formatAsDays) {
             res.send(JSON.parse(data.timetableDataAsDays));
@@ -86,7 +96,7 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
     const lessonsAsObjects: Lesson[] = getLessonsAsObject(lessonElements, branchType);
 
     if (process.env.USE_DB === "true") {
-      await saveTimetableToDB(lessonsAsObjects, header, shortLink, formatAsDays);
+      await saveTimetableToDB(lessonsAsObjects, header, link, shortLink);
     }
 
     res.send(createResponseObject(lessonsAsObjects, header, shortLink, formatAsDays));
@@ -121,8 +131,8 @@ router.get("/allBranches", async (req: Request, res: Response, next: NextFunctio
   }
 })
 
-async function saveTimetableToDB(lessonsAsObjects: Lesson[], header: string | undefined, shortLink: string | undefined, asDays: boolean) {
-  if (!shortLink || !header) {
+async function saveTimetableToDB(lessonsAsObjects: Lesson[], header: string | undefined, link: string | undefined, shortLink: string | undefined) {
+  if (!link || !header || !shortLink) {
     return
   }
 
@@ -143,8 +153,8 @@ async function saveTimetableToDB(lessonsAsObjects: Lesson[], header: string | un
 
 
   const timetableData = new BranchTimetableSchema<IBranchTimetableSchema>({
-    link: shortLink,
-    header: header,
+    link,
+    header,
     timetableData: JSON.stringify(data),
     timetableDataAsDays: JSON.stringify(daysOfLessons),
   })
