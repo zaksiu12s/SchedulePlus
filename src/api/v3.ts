@@ -16,6 +16,23 @@ import TeacherLesson from "../classes/Lesson/TeacherLesson.js";
 
 const router: Router = express.Router();
 
+router.get("/allTimetables", async (req, res) => {
+  try {
+    const data = await BranchTimetableSchema.find<IBranchTimetableSchema>();
+
+    const arr: any[] = await Promise.all(data.map(async (timetable) => {
+      return await JSON.parse(timetable.timetableData);
+    }));
+
+    res.json(arr);
+    return;
+  } catch (err) {
+    console.log(err);
+  }
+
+  res.status(400);
+});
+
 router.get("/specifiedTimetable", async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   console.log("request received");
   const link: string | undefined = req.query.link?.toString();
