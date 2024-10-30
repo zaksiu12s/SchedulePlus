@@ -151,16 +151,12 @@ async function saveTimetableToDB(lessonsAsObjects: Lesson[], header: string | un
     daysOfLessons.push(lessonsForDay);
   }
 
-
-  const timetableData = new BranchTimetableSchema<IBranchTimetableSchema>({
-    link,
-    header,
+  await BranchTimetableSchema.findOneAndUpdate<IBranchTimetableSchema>({ link: link }, {
     timetableData: JSON.stringify(data),
     timetableDataAsDays: JSON.stringify(daysOfLessons),
-  })
+  }, { upsert: true, new: true, setDefaultsOnInsert: true });
 
-  console.log('saving');
-  timetableData.save();
+  console.log("saving");
 }
 
 function createResponseObject(lessonsAsObjects: Lesson[], header: string | undefined, shortLink: string | undefined, asDays: boolean): LessonGetData[] | LessonGetData[][] {

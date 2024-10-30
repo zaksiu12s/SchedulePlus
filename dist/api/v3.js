@@ -120,14 +120,11 @@ async function saveTimetableToDB(lessonsAsObjects, header, link, shortLink) {
             .map((lesson) => lesson.setDayNumber(day).setHeader(header, shortLink).getData());
         daysOfLessons.push(lessonsForDay);
     }
-    const timetableData = new BranchTimetableSchema({
-        link,
-        header,
+    await BranchTimetableSchema.findOneAndUpdate({ link: link }, {
         timetableData: JSON.stringify(data),
         timetableDataAsDays: JSON.stringify(daysOfLessons),
-    });
-    console.log('saving');
-    timetableData.save();
+    }, { upsert: true, new: true, setDefaultsOnInsert: true });
+    console.log("saving");
 }
 function createResponseObject(lessonsAsObjects, header, shortLink, asDays) {
     const schoolDays = 5;
