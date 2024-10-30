@@ -1,6 +1,5 @@
 import express from "express";
 import { parse } from "node-html-parser";
-import "dotenv/config";
 import BranchTimetableSchema from "../models/branchTimetableModel.js";
 import TeacherData from "../classes/BranchData/TeacherData.js";
 import ClassData from "../classes/BranchData/ClassesData.js";
@@ -44,7 +43,7 @@ router.get("/specifiedTimetable", async (req, res, next) => {
             if (data?.timetableData && data?.timetableDataAsDays) {
                 if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
                     console.log("Scrape time");
-                    await BranchTimetableSchema.deleteOne({ link: shortLink });
+                    await BranchTimetableSchema.deleteMany({ link: shortLink });
                 }
                 else {
                     if (formatAsDays) {
