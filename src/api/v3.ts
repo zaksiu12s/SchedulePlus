@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction, Router } from "express";
 import { parse, HTMLElement as ParsedHTMLElement } from "node-html-parser";
-import "dotenv/config";
 
 import BranchTimetableSchema, { IBranchTimetableSchema } from "../models/branchTimetableModel.js";
 
@@ -61,7 +60,7 @@ router.get("/specifiedTimetable", async (req: Request, res: Response, next: Next
       if (data?.timetableData && data?.timetableDataAsDays) {
         if (data?.nextScrapeTime && data?.nextScrapeTime < currentDate) {
           console.log("Scrape time");
-          await BranchTimetableSchema.deleteOne({ link: shortLink });
+          await BranchTimetableSchema.deleteMany({ link: shortLink });
         } else {
           if (formatAsDays) {
             res.send(JSON.parse(data.timetableDataAsDays));
