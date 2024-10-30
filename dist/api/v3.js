@@ -9,6 +9,20 @@ import ClassLesson from "../classes/Lesson/ClassLesson.js";
 import ClassroomLesson from "../classes/Lesson/ClassroomLesson.js";
 import TeacherLesson from "../classes/Lesson/TeacherLesson.js";
 const router = express.Router();
+router.get("/allTimetables", async (req, res) => {
+    try {
+        const data = await BranchTimetableSchema.find();
+        const arr = await Promise.all(data.map(async (timetable) => {
+            return await JSON.parse(timetable.timetableData);
+        }));
+        res.json(arr);
+        return;
+    }
+    catch (err) {
+        console.log(err);
+    }
+    res.status(400);
+});
 router.get("/specifiedTimetable", async (req, res, next) => {
     console.log("request received");
     const link = req.query.link?.toString();
